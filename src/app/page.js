@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="bg-gradient-to-b from-primary_color to-[#103F56] min-h-screen relative flex flex-col gap-[3em]">
       <OceanWaves />
-      <div className="relative z-10 mt-[5em] pb-[5em]">
+      <div className="relative z-10 mt-[5em] pb-[5em] z-20">
        <Layout>
       <Header/>
       <AboutUs/>

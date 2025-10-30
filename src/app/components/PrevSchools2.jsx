@@ -215,7 +215,7 @@ const PrevSchools2 = () => {
       
       {/* Fixed Title */}
       <div className="absolute top-8 left-8 z-40 pointer-events-none">
-        <h1 className="text-4xl md:!text-[5em] text-white font-light ">Previous Schools</h1>
+        <h1 className=" !text-[5em] text-white font-light ">Previous Schools</h1>
       </div>
 
       <CustomSubmarine scrollProgress={scrollYProgress} />

@@ -105,7 +105,7 @@ function SubmarineModel({ scrollProgress }) {
     <group ref={submarineRef} rotation={[0.5, 1, 0.1]} position={[0, 0, 0]}>
       <primitive 
         object={clonedScene} 
-        scale={1.3} 
+        scale={1.1} 
         rotation={[0, 4, 0]}
         ref={modelRef}
         position={[0, 0, 0]}
@@ -119,9 +119,9 @@ function SubmarineModel({ scrollProgress }) {
 
 const  CustomSubmarine = ({ scrollProgress }) => {
   return (
-    <div className="sticky   top-[70%] translate-y-[-40%]  md:translate-y-0 md:top-[60%] md:left-[50%]  md:translate-x-[-50%] w-full h-[300px] md:w-[900px] md:h-[700px] flex items-center justify-center pointer-events-none z-30">
+    <div className="sticky left-1/2 top-[80%] md:-translate-x-1/4 -translate-y-1/2  w-full h-[300px] md:w-[900px] md:h-[500px] flex items-center justify-center pointer-events-none z-30">
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 55 }}
+        camera={{ position: [0, 0, 5.5], fov: 80 }}
         style={{ background: 'transparent', width: '100%', height: '100%', pointerEvents: 'none' }}
         gl={{ alpha: true, antialias: true }}
       >
