@@ -1,6 +1,7 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Image from 'next/image'
+import { motion, useInView } from 'framer-motion'
 import { 
   HiLightningBolt, 
   HiUsers, 
@@ -15,53 +16,61 @@ const WhyAttend = () => {
     {
       id: 1,
       text: "Skill development",
-      image: "/ocean3.jpg",
-      icon: <HiLightningBolt className="text-4xl" />
+      image: "/gallery/3.jpg",
+      icon: <HiLightningBolt className="lg:text-4xl text-2xl" />
     },
     {
       id: 2,
       text: "Networking",
-      image: "/ocean4.jpg",
-      icon: <HiUsers className="text-4xl" />
+      image: "/gallery/5.jpg",
+      icon: <HiUsers className="lg:text-4xl text-2xl" />
     },
     {
       id: 3,
       text: "Certification",
-      image: "/ocean2.jpg",
-      icon: <HiAcademicCap className="text-4xl" />
+      image: "/gallery/7.jpg",
+      icon: <HiAcademicCap className="lg:text-4xl text-2xl" />
     },
     {
       id: 4,
       text: "Future opportunities",
-      image: "/ocean3.jpg",
-      icon: <HiTrendingUp className="text-4xl" />
+      image: "/gallery/8.jpg",
+      icon: <HiTrendingUp className="lg:text-4xl text-2xl" />
     }
   ]
 
   return (
-    <div className=' min-h-screen py-16 px-8 relative'>
+    <div className='  py-16 lg:px-8 relative'>
       {/* Title */}
-      <h1 className="text-6xl  text-white mb-16">Why attend?</h1>
+      <h1 className="text-6xl  text-white lg:mb-16">Why attend?</h1>
       
       {/* Reasons List */}
-      <div className='space-y-8 mt-[4em] flex flex-col gap-[2em]'>
-        {reasons.map((reason, index) => (
-          <div 
-            key={reason.id}
-            className='relative group'
-            onMouseEnter={() => setHoveredItem(reason.id)}
-            onMouseLeave={() => setHoveredItem(null)}
-          >
+      <div className='lg:space-y-8 mt-[4em] flex flex-col gap-[2em]'>
+        {reasons.map((reason, index) => {
+          const ref = useRef(null)
+          const isInView = useInView(ref, { once: false, amount: 0.3 })
+          
+          return (
+            <motion.div 
+              key={reason.id}
+              ref={ref}
+              className='relative group'
+              onMouseEnter={() => setHoveredItem(reason.id)}
+              onMouseLeave={() => setHoveredItem(null)}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
+              transition={{ duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
+            >
              {/* Icon and Text */}
-             <div className={`flex items-center space-x-6 ${index === 0 ? 'lg:ml-30' : index === 1  ? 'ml-5' : index === 3 ? 'ml-8' : index === 2 ? 'self-' : 'ml-0' || index === 4 ? 'ml-24' : 'ml-0'}`}>
+             <div className={`flex items-center lg:space-x-6 ${index === 0 ? 'lg:ml-30' : index === 1  ? 'ml-5' : index === 3 ? 'ml-8' : index === 2 ? 'self-' : 'ml-0' || index === 4 ? 'ml-24' : 'ml-0'}`}>
                {/* Icon */}
-               <div className='text-white flex-shrink-0'>
+               <div className='text-white  flex-shrink-0'>
                  {reason.icon}
                </div>
                
                {/* Text with Underline */}
                <div className='relative'>
-                 <h2 className='!text-[3em] md:!text-8xl  text-white mb-2'>
+                 <h2 className='!text-[2em] md:!text-8xl  text-white mb-2'>
                    {reason.text}
                  </h2>
                  {/* Underline that extends beyond text */}
@@ -82,8 +91,9 @@ const WhyAttend = () => {
                 </div>
               </div>
             )}
-          </div>
-        ))}
+            </motion.div>
+          )
+        })}
       </div>
     </div>
   )

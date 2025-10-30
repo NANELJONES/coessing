@@ -1,5 +1,5 @@
 import { graphcms } from './graphql'
-import { GET_SCHOOLS, GET_SCHOOL_BY_SLUG, GET_GALLERIES_BY_SCHOOL, GET_PARTNERS } from './queries'
+import { GET_SCHOOLS, GET_SCHOOL_BY_SLUG, GET_GALLERIES_BY_SCHOOL, GET_PARTNERS, GET_COMMUNITY_VOICES, GET_TESTIMONIALS } from './queries'
 
 export async function getSchools(limit = 7) {
   try {
@@ -45,6 +45,41 @@ export async function getPartners() {
   } catch (error) {
     console.error('Error fetching partners:', error)
     return []
+  }
+}
+
+export async function getCommunityVoices(first = 10, skip = 0) {
+  try {
+    const data = await graphcms.request(GET_COMMUNITY_VOICES, { first, skip })
+    const edges = data.communityVoicesConnection.edges || []
+    return {
+      items: edges.map(e => ({ id: e.node.id, voice: e.node.voice || [] })),
+      pageInfo: data.communityVoicesConnection.pageInfo
+    }
+  } catch (error) {
+    console.error('Error fetching community voices:', error)
+    return { items: [], pageInfo: { hasNextPage: false } }
+  }
+}
+
+export async function getTestimonials(first = 10, skip = 0) {
+  try {
+    const data = await graphcms.request(GET_TESTIMONIALS, { first, skip })
+    const edges = data.testimonialsConnection.edges || []
+    return {
+      items: edges.map(e => ({
+        id: e.node.id,
+        title: e.node.title,
+        interest: e.node.interest,
+        schoolYear: e.node.schoolYear,
+        testimonial: e.node.testimonial,
+        imageUrl: e.node.image?.url || ''
+      })),
+      pageInfo: data.testimonialsConnection.pageInfo
+    }
+  } catch (error) {
+    console.error('Error fetching testimonials:', error)
+    return { items: [], pageInfo: { hasNextPage: false } }
   }
 }
 

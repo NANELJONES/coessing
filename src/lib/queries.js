@@ -95,3 +95,45 @@ export const GET_PARTNERS = gql`
     }
   }
 `
+
+export const GET_COMMUNITY_VOICES = gql`
+  query GetCommunityVoices($first: Int!, $skip: Int!) {
+    communityVoicesConnection(first: $first, skip: $skip, orderBy: createdAt_DESC) {
+      edges {
+        node {
+          id
+          voice { url }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+`
+
+export const GET_TESTIMONIALS = gql`
+  query GetTestimonials($first: Int!, $skip: Int!) {
+    testimonialsConnection(first: $first, skip: $skip, orderBy: createdAt_DESC) {
+      edges {
+        node {
+          id
+          title
+          interest
+          schoolYear
+          testimonial
+          image { url }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+`

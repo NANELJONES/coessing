@@ -1,7 +1,8 @@
 'use client';
 
 import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { useScroll } from 'framer-motion';
 import * as THREE from 'three';
 
 function WaveParticles({ count = 5000 }) {
@@ -91,13 +92,38 @@ function WaveParticles({ count = 5000 }) {
   );
 }
 
+// Camera Controller Component - Beach eye-level perspective, moves forward on scroll
+function CameraController() {
+  const { camera } = useThree();
+  const { scrollYProgress } = useScroll();
+  
+  useFrame(() => {
+    // Get current scroll progress (0 to 1)
+    const scrollProgress = scrollYProgress.get();
+    
+    // Camera at beach eye level (human eye height ~1.6-1.8)
+    // Positioned on the beach, looking out at the ocean horizontally
+    const cameraHeight = 1.7; // Eye level - stays constant
+    const cameraZ = 15 - (scrollProgress * 10); // Move forward through ocean on scroll
+    
+    camera.position.set(0, cameraHeight, cameraZ);
+    
+    // Look horizontally ahead at eye level - slight downward angle to see ocean surface
+    // This creates the beach perspective - standing looking out at the ocean
+    camera.lookAt(0, 1.5, cameraZ - 3);
+  });
+  
+  return null;
+}
+
 function OceanWaves() {
   return (
     <div className="fixed top-0 inset-0 w-full h-full pointer-events-none">
       <Canvas
-        camera={{ position: [0, 8, 15], fov: 75 }}
+        camera={{ position: [0, 1.7, 15], fov: 75 }}
         style={{ background: 'transparent' }}
       >
+        <CameraController />
         <WaveParticles count={5000} />
       </Canvas>
     </div>

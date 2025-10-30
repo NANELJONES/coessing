@@ -1,178 +1,300 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
-import { HiMenu, HiX, HiChevronDown } from "react-icons/hi";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSchoolContext } from '@/contexts/SchoolContext';
+import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 
 const Nav = () => {
-  const [show_nav, set_show_nav] = useState(false);
-  const [show_schools_dropdown, set_show_schools_dropdown] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [schoolsExpanded, setSchoolsExpanded] = useState(false);
   const { schools, loading: schoolsLoading } = useSchoolContext();
-  const dropdownRef = useRef(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        set_show_schools_dropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const nav_options = [
     { nav_name: "Home", nav_link: "/" },
-    { nav_name: "Community Voice", nav_link: "/" },
+    { nav_name: "Community Voice", nav_link: "/community-voice" },
     { nav_name: "Register & Apply", nav_link: "https://docs.google.com/forms/d/e/1FAIpQLScabZ-nLb_5q-VL_h4ZePASn3PToqe3W8ZYdw2ovFgMsLhcJg/closedform" },
-    { nav_name: "Resources", nav_link: "/" },
+
+    { nav_name: "Resources", nav_link: "/resources" },
+    { nav_name: "Testimonials", nav_link: "/testimonials" },
     { nav_name: "About Us", nav_link: "/aboutUs" },
   ];
 
+  // Colors for pre-layers (background layers)
+  const colors = ['#1e1e22', '#35353c', '#2E8596'];
+  const preLayers = colors.slice(0, colors.length >= 3 ? 2 : colors.length);
+
+  const toggleMenu = useCallback(() => {
+    setOpen(prev => !prev);
+  }, []);
+
   return (
-    <nav className="fixed top-0 w-full z-50 bg-gradient-to-r from-primary_color to-transparent backdrop-blur-md shadow-lg">
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center h-16">
-          
-          {/* Logo - Left side */}
+    <div 
+      className="fixed top-0 left-0 w-full z-50"
+      data-open={open || undefined}
+    >
+      {/* Pre-layers (Background layers that slide in first) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {preLayers.map((color, i) => (
+          <motion.div
+            key={i}
+            className="absolute inset-0"
+            style={{ background: color, zIndex: 49 + i }}
+            initial={{ x: '100%' }}
+            animate={{ 
+              x: open ? '0%' : '100%',
+            }}
+            transition={{ 
+              duration: 0.5, 
+              delay: i * 0.07,
+              ease: [0.16, 1, 0.3, 1]
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Header */}
+      <header className={`relative ${open ? 'z-[60]' : 'z-50'} flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8 ${open ? 'bg-gradient-to-r from-primary_color to-transparent backdrop-blur-md' : 'bg-transparent'}`}>
           <div className="flex-shrink-0">
-            <div className="bg-white p-2 rounded-full">
+            <div className="bg-white p-2 ">
               <img
                 src="/Logo.webp"
                 alt="Company Logo"
-                className="w-8 h-8 rounded-full"
+                className="w-20 "
               />
             </div>
           </div>
 
-          {/* Desktop Navigation - Center */}
-          <div className="hidden md:block">
-            <div className="flex items-center space-x-8">
-              {nav_options.map((item) => (
-                <Link
-                  key={item.nav_name}
-                  href={item.nav_link}
-                  className="text-white hover:text-secondary_color px-3 py-2 text-sm font-medium transition-colors duration-200"
-                >
-                  {item.nav_name}
-                </Link>
-              ))}
-              
-              {/* Our Schools Dropdown */}
-              <div className="relative" ref={dropdownRef}>
-                <span
-                  onClick={() => set_show_schools_dropdown(!show_schools_dropdown)}
-                  className="text-white hover:text-secondary_color px-3 py-2 text-sm font-medium transition-colors duration-200 flex items-center gap-1"
-                >
-                  Our Schools
-                  <HiChevronDown className={`w-4 h-4 transition-transform duration-200 ${show_schools_dropdown ? 'rotate-180' : ''}`} />
-                </span>
-                
-                {show_schools_dropdown && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    {schoolsLoading ? (
-                      <div className="px-4 py-2 text-gray-600 text-sm">Loading schools...</div>
-                    ) : schools.length > 0 ? (
-                      schools
-                        .sort((a, b) => b.schoolYear - a.schoolYear)
-                        .map((school) => (
-                          <Link
-                            key={school.slug}
-                            href={`/schools/${school.slug}`}
-                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-primary_color transition-colors duration-200"
-                            onClick={() => set_show_schools_dropdown(false)}
-                          >
-                            <div className="font-medium">{school.schoolName}</div>
-                            <div className="text-xs text-gray-500">{school.schoolYear}</div>
-                          </Link>
-                        ))
-                    ) : (
-                      <div className="px-4 py-2 text-gray-600 text-sm">No schools available</div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Desktop Contact Us Button */}
-          <div className="hidden md:block">
-            <button className=" text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-80 transition-colors duration-200">
-              Contact Us
-            </button>
-          </div>
-
-          {/* Mobile menu button - Right side */}
-          <div className="md:hidden">
-            <button
-              onClick={() => set_show_nav(!show_nav)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-secondary_color focus:outline-none focus:ring-2 focus:ring-inset focus:ring-secondary_color transition-colors duration-200"
-            >
-              <span className="sr-only">Open main menu</span>
-              {show_nav ? (
-                <HiX className="block h-6 w-6" />
-              ) : (
-                <HiMenu className="block h-6 w-6" />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Navigation Menu */}
-      {show_nav && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200 shadow-lg">
-            {nav_options.map((item) => (
-              <Link
-                key={item.nav_name}
-                href={item.nav_link}
-                className="text-gray-700 hover:text-primary_color block px-3 py-2 text-base font-medium hover:bg-gray-50 rounded-md transition-colors duration-200"
-                onClick={() => set_show_nav(false)}
+        {/* Menu Toggle div */}
+        <motion.div
+          className="relative flex items-center justify-center px-4 py-2 rounded-sm border-2 border-white backdrop-blur-md bg-white/10 cursor-pointer"
+          onClick={toggleMenu}
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+        >
+          {/* Menu State - Horizontal Layout */}
+          <AnimatePresence mode="wait">
+            {!open && (
+              <motion.div
+                key="menu"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-2"
               >
-                {item.nav_name}
-              </Link>
-            ))}
-            
-            {/* Our Schools Mobile Dropdown */}
-            <div className="px-3 py-2">
-              <div className="text-gray-700 text-base font-medium mb-2">Our Schools</div>
-              <div className="ml-4 space-y-1">
-                {schoolsLoading ? (
-                  <div className="text-gray-500 text-sm">Loading schools...</div>
-                ) : schools.length > 0 ? (
-                  schools
-                    .sort((a, b) => b.schoolYear - a.schoolYear)
-                    .map((school) => (
+                <span className="text-xs font-medium uppercase text-white">Menu</span>
+                <motion.span
+                  className="flex items-center justify-center w-4 h-4"
+                  style={{ originX: 0.5, originY: 0.5 }}
+                >
+                  <span className="absolute w-3 h-0.5 bg-white"></span>
+                  <span className="absolute w-3 h-0.5 bg-white rotate-90"></span>
+                </motion.span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Close State - Horizontal Layout */}
+          <AnimatePresence mode="wait">
+            {open && (
+              <motion.div
+                key="close"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-2"
+              >
+                <span className="text-xs font-medium uppercase text-primary_color">Close</span>
+                <motion.span
+                  className="flex items-center justify-center w-4 h-4"
+                  initial={{ rotate: 0 }}
+                  animate={{ rotate: 45 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ originX: 0.5, originY: 0.5 }}
+                >
+                  <span className="absolute w-3 h-0.5 bg-primary_color"></span>
+                  <span className="absolute w-3 h-0.5 bg-primary_color rotate-90"></span>
+                </motion.span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </header>
+
+      {/* Main Panel */}
+      <AnimatePresence>
+        {open && (
+          <motion.aside
+            className="fixed top-0 right-0 w-full sm:w-[400px] lg:w-[500px] h-screen bg-white z-[55] shadow-2xl"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ 
+              duration: 0.65,
+              delay: preLayers.length * 0.07 + 0.08,
+              ease: [0.16, 1, 0.3, 1]
+            }}
+            aria-hidden={!open}
+          >
+            <div className="h-full overflow-y-auto overscroll-contain px-8 pt-24 pb-12" style={{ WebkitOverflowScrolling: 'touch' }}>
+              {/* Navigation Items */}
+              <ul className="space-y-4 mb-12">
+                {nav_options.map((item, index) => {
+                  const navIndex = index + 1;
+                  
+                  // Insert "Our Schools" after "Register & Apply" (index 3)
+                  if (navIndex === 3) {
+                    return (
+                      <React.Fragment key={`fragment-${index}`}>
+                        <motion.li
+                          key={item.nav_name}
+                          initial={{ y: '140%', rotate: 10, opacity: 0 }}
+                          animate={{ y: 0, rotate: 0, opacity: 1 }}
+                          exit={{ y: '140%', rotate: 10, opacity: 0 }}
+                          transition={{ 
+                            duration: 1,
+                            delay: (preLayers.length * 0.07 + 0.08 + 0.65 * 0.15) + (index * 0.1),
+                            ease: [0.16, 1, 0.3, 1]
+                          }}
+                          className="overflow-hidden text-primary_color hover:text-secondary_color "
+                        >
+                          <Link
+                            href={item.nav_link}
+                            className="block text-4xl md:text-5xl  transition-colors duration-200"
+                            onClick={() => setOpen(false)}
+                          >
+                            <span className="block">
+                              {String(navIndex).padStart(2, '0')}. {item.nav_name}
+                            </span>
+                          </Link>
+                        </motion.li>
+                        
+                        {/* Our Schools - Expandable Nav Item */}
+                        <motion.li
+                          key="our-schools"
+                          initial={{ y: '140%', rotate: 10, opacity: 0 }}
+                          animate={{ y: 0, rotate: 0, opacity: 1 }}
+                          exit={{ y: '140%', rotate: 10, opacity: 0 }}
+                          transition={{ 
+                            duration: 1,
+                            delay: (preLayers.length * 0.07 + 0.08 + 0.65 * 0.15) + ((index + 1) * 0.1),
+                            ease: [0.16, 1, 0.3, 1]
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div
+                            onClick={() => setSchoolsExpanded(!schoolsExpanded)}
+                            className="group flex items-center justify-between w-full text-4xl md:text-5xl  text-primary_color hover:text-secondary_color transition-colors duration-200 text-left cursor-pointer"
+                          >
+                            <span className="block">
+                              {String(navIndex + 1).padStart(2, '0')}. Our Schools
+                            </span>
+                            <motion.span
+                              animate={{ rotate: schoolsExpanded ? 180 : 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="ml-4 flex-shrink-0"
+                            >
+                              <HiChevronDown className="w-8 h-8 text-primary_color group-hover:text-secondary_color transition-colors duration-200" />
+                            </motion.span>
+                          </div>
+                          
+                          {/* Expandable Schools List */}
+                          <AnimatePresence>
+                            {schoolsExpanded && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                className="overflow-hidden mt-4 ml-8 text-primary_color hover:text-secondary_color "
+                              >
+                                <div className="space-y-3 pt-2">
+                                  {schoolsLoading ? (
+                                    <div className="text-gray-500 text-sm">Loading schools...</div>
+                                  ) : schools.length > 0 ? (
+                                    schools
+                                      .sort((a, b) => b.schoolYear - a.schoolYear)
+                                      .map((school) => (
+                                        <motion.div
+                                          key={school.slug}
+                                          initial={{ opacity: 0, x: -20 }}
+                                          animate={{ opacity: 1, x: 0 }}
+                                          exit={{ opacity: 0, x: -20 }}
+                                          transition={{ duration: 0.2 }}
+                                        >
+                                          <Link
+                                            href={`/schools/${school.slug}`}
+                                            className="block px-2 border-b-2 border-b-primary_color transition-colors duration-200"
+                                            onClick={() => setOpen(false)}
+                                          >
+                                            <div className="font-semibold ">{school.schoolName}</div>
+                                            <div className="text-sm mt-1">{school.schoolYear}</div>
+                                          </Link>
+                                        </motion.div>
+                                      ))
+                                  ) : (
+                                    <div className="text-gray-500 text-sm">No schools available</div>
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.li>
+                      </React.Fragment>
+                    );
+                  }
+                  
+                  // For items after index 2, add 1 to account for inserted "Our Schools"
+                  const displayIndex = index <= 2 ? navIndex : navIndex + 1;
+                  
+                  return (
+                    <motion.li
+                      key={item.nav_name}
+                      initial={{ y: '140%', rotate: 10, opacity: 0 }}
+                      animate={{ y: 0, rotate: 0, opacity: 1 }}
+                      exit={{ y: '140%', rotate: 10, opacity: 0 }}
+                      transition={{ 
+                        duration: 1,
+                        delay: (preLayers.length * 0.07 + 0.08 + 0.65 * 0.15) + (index <= 2 ? index * 0.1 : (index + 1) * 0.1),
+                        ease: [0.16, 1, 0.3, 1]
+                      }}
+                      className="overflow-hidden text-primary_color hover:text-secondary_color "
+                    >
                       <Link
-                        key={school.slug}
-                        href={`/schools/${school.slug}`}
-                        className="block text-gray-600 hover:text-primary_color text-sm py-1 transition-colors duration-200"
-                        onClick={() => set_show_nav(false)}
+                        href={item.nav_link}
+                        className="block text-4xl md:text-5xl  text-primary_color hover:text-secondary_color transition-colors duration-200"
+                        onClick={() => setOpen(false)}
                       >
-                        <div className="font-medium">{school.schoolName}</div>
-                        <div className="text-xs text-gray-500">{school.schoolYear}</div>
+                        <span className="block">
+                          {String(displayIndex).padStart(2, '0')}. {item.nav_name}
+                        </span>
                       </Link>
-                    ))
-                ) : (
-                  <div className="text-gray-500 text-sm">No schools available</div>
-                )}
-              </div>
-            </div>
-            
-            {/* Contact Us button inside mobile menu */}
-            <div className="pt-2">
-              <button className="w-full bg-primary_color text-white px-4 py-2 rounded-full text-base font-medium hover:bg-opacity-80 transition-colors duration-200">
+                    </motion.li>
+                  );
+                })}
+              </ul>
+
+              {/* Contact Us div */}
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 25 }}
+                transition={{ 
+                  duration: 0.55,
+                  delay: (preLayers.length * 0.07 + 0.08 + 0.65 * 0.4) + 0.04 + 0.3,
+                  ease: [0.65, 0, 0.35, 1]
+                }}
+                className="w-full bg-primary_color text-white px-6 py-4 rounded-full text-lg font-medium hover:bg-opacity-90 transition-colors duration-200"
+              >
                 Contact Us
-              </button>
+              </motion.div>
             </div>
-          </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
         </div>
-      )}
-    </nav>
   );
 };
 

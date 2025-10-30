@@ -26,46 +26,27 @@ const SchoolDetailClient = ({ school, transformedSchool, sections }) => {
   }, [schools, schoolsLoading, transformedSchool.slug])
 
   return (
-    <div className="min-h-screen bg-primary_color py-16 px-8 relative">
-      <div className=" mx-auto">
+    <div className="min-h-screen text-primary_color mb-[2em] w-full flex   px-8 lg:px-0 relative">
+      <div className=" mx-auto w-full">
         <div className="flex gap-8">
-          {/* Left Sidebar - Previous Schools */}
+          {/* Left Sidebar - Section Navigation */}
           <div className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24">
-              <h3 className="text-xl font-bold text-white mb-4">Previous Schools</h3>
-              <div className="space-y-2 ">
-                {schoolsLoading ? (
-                  <div className="text-white">Loading...</div>
-                ) : previousSchools.length > 0 ? (
-                  previousSchools.map((prevSchool) => (
-                    <Link
-                      key={prevSchool.slug}
-                      href={`/schools/${prevSchool.slug}`}
-                      className="block p-3 bg-secondary_color/30  shadow-lg rounded-lg hover:bg-opacity-20 transition-all duration-200 group"
-                    >
-                      <div className="text-white group-hover:text-secondary_color transition-colors">
-                        <div className="font-semibold text-sm">{prevSchool.schoolName}</div>
-                        <div className="text-xs text-gray-300">{prevSchool.year}</div>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="text-white text-sm">No previous schools found</div>
-                )}
-              </div>
+            <div className="sticky top-4">
+              <SectionNavigation sections={sections} />
             </div>
           </div>
 
           {/* Main Content */}
           <div className="flex-1 max-w-4xl">
             {/* School Header */}
-            <div className="text-white mb-8">
-              <h1 className="text-6xl font-bold mb-4">{transformedSchool.schoolName}</h1>
-              <div className="flex items-center gap-4 mb-4">
+            <div className=" mb-8">
+              <h1 className="!text-[3em] md:!text-[5em] mb-4">{transformedSchool.schoolName}</h1>
+              <div className="flex items-center gap-4 ">
                 <span className="text-2xl font-semibold">{transformedSchool.year}</span>
                 <span className="text-lg">📍 {transformedSchool.location}</span>
               </div>
-              <p className="text-xl text-gray-300 mb-6">{transformedSchool.theme}</p>
+              <h3 className="text-xl italic ">Theme:{transformedSchool.theme}</h3>
+              <p className="text-lg capitalize">Status: {transformedSchool.status}</p>
             </div>
 
             {/* Cover Image - Fixed to use Next.js Image */}
@@ -82,10 +63,11 @@ const SchoolDetailClient = ({ school, transformedSchool, sections }) => {
             )}
 
             {/* School Details */}
-            <div className="text-white space-y-6">
+            <div className=" space-y-6">
               <div id="about">
-                <h2 className="text-3xl font-bold mb-4">About This School</h2>
-                <p className="text-lg leading-relaxed">{transformedSchool.excerpt}</p>
+                <h2 className="text-3xl  mb-4">About This School</h2>
+                <br />
+                <p className="!text-lg md:!text-[3em] leading-none">{transformedSchool.excerpt}</p>
               </div>
 
               {transformedSchool.description && (
@@ -98,7 +80,7 @@ const SchoolDetailClient = ({ school, transformedSchool, sections }) => {
               {school.schoolDetails?.raw && (
                 <div id="details">
                   <h2 className="text-3xl font-bold mb-4">Details</h2>
-                  <div className="prose prose-invert max-w-none text-white">
+                  <div className="prose prose-invert max-w-none ">
                     <RichText 
                       content={school.schoolDetails.raw}
                       renderers={{
@@ -126,7 +108,7 @@ const SchoolDetailClient = ({ school, transformedSchool, sections }) => {
                     {transformedSchool.instructors.map((instructor, index) => (
                       <span
                         key={index}
-                        className="bg-secondary_color text-white px-4 py-2 rounded-full"
+                        className="bg-primary_color text-white  px-4 py-2 rounded-full"
                       >
                         {instructor}
                       </span>
@@ -136,16 +118,20 @@ const SchoolDetailClient = ({ school, transformedSchool, sections }) => {
               )}
 
               {/* School Info */}
-              <div id="info" className="grid text-primary_color grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white bg-opacity-10 p-6 rounded-lg">
+              {/* <div id="info" className="grid text-primary_color grid-cols-1 md:grid-cols-2 gap-6">
+                <div className=" bg-opacity-10 border-2 border-primary_color p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-2">Country</h3>
                   <p className="text-lg capitalize">{transformedSchool.country}</p>
                 </div>
-                <div className="bg-white bg-opacity-10 p-6 rounded-lg">
+                <div className=" bg-opacity-10 border-2 border-primary_color p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-2">Status</h3>
                   <p className="text-lg capitalize">{transformedSchool.status}</p>
                 </div>
-              </div>
+
+
+              </div> */}
+
+
             </div>
 
             {/* Gallery Section */}
@@ -153,11 +139,38 @@ const SchoolDetailClient = ({ school, transformedSchool, sections }) => {
               <GallerySection schoolSlug={transformedSchool.slug} />
             </div>
           </div>
+
+          {/* Right Sidebar - Previous Schools */}
+          <div className="hidden lg:block w-64 flex-shrink-0">
+            <div className="sticky top-4">
+              <h3 className="text-xl   mb-4">Previous Schools</h3>
+              <div className="space-y-2 ">
+                {schoolsLoading ? (
+                  <div className="">Loading...</div>
+                ) : previousSchools.length > 0 ? (
+                  previousSchools.map((prevSchool) => (
+                    <Link
+                      key={prevSchool.slug}
+                      href={`/schools/${prevSchool.slug}`}
+                      className="block border-b-2 border-b-primary_color py-2    hover:bg-opacity-20 transition-all duration-200 group"
+                    >
+                      <div className=" group-hover:text-secondary_color transition-colors">
+                        <div className="font-semibold text-sm">{prevSchool.schoolName}</div>
+                        <div className="text-xs ">{prevSchool.year}</div>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className=" text-sm">No previous schools found</div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Section Navigation */}
-      <SectionNavigation sections={sections} />
+
+
     </div>
   )
 }

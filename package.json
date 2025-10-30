@@ -13,7 +13,7 @@
     "@graphcms/rich-text-react-renderer": "^0.6.2",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
-    "@splinetool/react-spline": "^4.0.0",
+    "@splinetool/react-spline": "^4.1.0",
     "axios": "^1.7.7",
     "dompurify": "^3.2.3",
     "emailjs": "^4.0.3",

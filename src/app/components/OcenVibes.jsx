@@ -1,4 +1,5 @@
 import React from 'react'
+import { FadeIn } from './Animations'
 
 const OcenVibes = () => {
 
@@ -36,14 +37,16 @@ const OcenVibes = () => {
   ]
   return (
     <div className='flex flex-col gap-[2em] self-end'>
+      <FadeIn type="fade-up">
      <h1 className=' mt-[10em] !text-4xl md:!text-[5em] text-white max-w-[1000px]'>Strengthening Ocean Science Capacity in Africa</h1>
     
-    
+     </FadeIn>
+
     <div className= "flex flex-col gap-[2em] self-end text-white w-full max-w-[600px]">
       <p>Africa’s coasts and oceans are vital for livelihoods, climate resilience, and sustainable development.</p>
       <p>By training the next generation of ocean scientists, COESSING empowers young leaders to tackle regional challenges with global collaboration and local insights.</p>
   
-  
+   
     </div>
 
 
@@ -58,7 +61,7 @@ const OcenVibes = () => {
   
   {/* rightside */}
 
-  <div className="w-full md:w-1/2 grid grid-cols-2 gap-[2em] max-w-[600px]">
+  <div className="w-full md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-[2em] max-w-[600px]">
     {data.map((each_data, index) => (
       <div key={index} className="text-white text-center flex flex-col items-center justify-center bg-gradient to-b from-secondary_color/10 shadow-md  border border-secondary_color to-transparent backdrop-blur-sm rounded-md p-4 min-h-[8em]">
         <h1>{each_data.firstTitle}</h1>

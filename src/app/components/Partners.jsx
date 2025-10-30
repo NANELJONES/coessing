@@ -70,25 +70,26 @@ const Partners = () => {
   }
 
   return (
-    <div className="py-16 px-8 bg-gradient-to-b from-primary_color/90 to-primary_color/60 backdrop-blur-sm">
-      <div className="max-w-6xl mx-auto text-white text-left">
-        <h2 className="text-4xl lg:!text-[4em]  mb-4">Our Partners</h2>
+    <div className="  border-2 border-white/10 rounded-lg p-6   backdrop-blur-sm">
+      <div className=" mx-auto text-white text-left">
+        <h2 className="!text-[4em] lg:!text-[4em]  mb-4">Our Partners</h2>
         <p className="text-white/80  mb-12 max-w-2xl mx-auto">
           We are grateful for the support of our funding partners and institutional collaborators 
           who make COESSING possible.
         </p>
+        <br/>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {partners.map((partner, index) => (
             <div 
               key={index}
-              className="bg-white/5 backdrop-blur-sm rounded-lg p-6 flex flex-col items-center justify-center hover:bg-white/10 transition-all duration-300 group"
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-2 flex flex-col items-center justify-center hover:bg-white/10 transition-all duration-300 group"
             >
-              <div className="relative w-[10em] h-[10em]  max-w-[200px] mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Image
+              <div className="relative w-[10em] h-auto  max-w-[250px] mb-4 group-hover:scale-110 transition-transform duration-300">
+                <img
                   src={partner.partnerLogo?.url || '/placeholder-logo.png'}
                   alt={partner.partnerName}
-                  fill
+                 
                   className="object-contain"
                 />
               </div>
