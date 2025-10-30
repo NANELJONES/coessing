@@ -118,7 +118,7 @@ function CameraController() {
 
 function OceanWaves() {
   return (
-    <div className="fixed top-0 inset-0 w-full h-full pointer-events-none">
+    <div className="fixed top-0 inset-0 w-full h-full pointer-events-none z-0">
       <Canvas
         camera={{ position: [0, 1.7, 15], fov: 75 }}
         style={{ background: 'transparent' }}

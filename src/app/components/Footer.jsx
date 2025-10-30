@@ -33,100 +33,88 @@ const Footer = () => {
   ]
 
   return (
-    <div className='w-full bg-gradient-to-b backdrop-blur-xs  from-primary_color/80 to-primary_color py-16 px-8'>
-      <div className="max-w-6xl mx-auto">
-        {/* Let's Talk Section - Full Width */}
-        <div className="text-center mb-16">
-          <h1 className='text-white text-6xl md:!text-[8em] lg:!text-[12em] leading-none mb-8'>
+    <div className='w-full bg-white text-primary_color py-16 md:py-24 px-6 md:px-10 relative z-20'>
+      <div className="max-w-7xl mx-auto">
+        {/* Headline */}
+        <div className="mb-16 md:mb-24">
+          <h1 className=' text-6xl md:!text-[9em] lg:!text-[11em] leading-none'>
             Let's talk
           </h1>
-          <p className="text-white/80 text-lg  mx-auto leading-relaxed">
-            Connect with us and be part of the ocean science community. 
-            Follow our journey and stay updated with the latest news.
-          </p>
         </div>
 
-        {/* Contact Info & Social Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-          {/* Contact Information */}
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-white mb-6 text-left">Get in Touch</h3>
-            
-            <div className="flex items-center gap-4 text-white/80">
-              <HiMail className="w-5 h-5 text-secondary_color flex-shrink-0" />
-              <span>hello@coessing.org</span>
-            </div>
-            
-            <div className="flex items-center gap-4 text-white/80">
-              <HiPhone className="w-5 h-5 text-secondary_color flex-shrink-0" />
-              <span>+1 (555) 123-4567</span>
-            </div>
-            
-            <div className="flex items-start gap-4 text-white/80">
-              <HiLocationMarker className="w-5 h-5 text-secondary_color flex-shrink-0 mt-1" />
-              <div>
+        {/* Big link grid (Kaleida-style) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-16 md:mb-24">
+          <div className="space-y-5">
+            <a href="/" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Home</a>
+            <a href="/aboutUs" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">About</a>
+            <a href="/resources" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Resources</a>
+          </div>
+          <div className="space-y-5">
+            <a href="/schools/ghana" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Schools</a>
+            <a href="/community-voice" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Community</a>
+            <a href="/testimonials" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Testimonials</a>
+          </div>
+          <div>
+            <div className="/70 uppercase tracking-wide text-sm mb-6">Say Hello</div>
+            <div className="space-y-4 /90">
+              <div className="flex items-center gap-3"><HiMail className="w-5 h-5 /70" /><span>hello@coessing.org</span></div>
+              <div className="flex items-center gap-3"><HiPhone className="w-5 h-5 /70" /><span>+1 (555) 123-4567</span></div>
+              <div className="flex items-start gap-3"><HiLocationMarker className="w-5 h-5 /70 mt-1" /><div>
                 <p>University of Michigan</p>
                 <p>Ann Arbor, MI 48109</p>
                 <p>Ghana & Nigeria</p>
-              </div>
+              </div></div>
             </div>
-          </div>
-
-          {/* Social Media Links */}
-          <div className="flex flex-col items-center lg:items-start">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center lg:text-left">Follow Us</h3>
-            <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+            <div className="flex gap-4 mt-8">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-4 transition-all duration-300 group"
+                  className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition"
                   aria-label={`Follow us on ${social.name}`}
                 >
-                  <div className="text-white group-hover:text-secondary_color transition-colors duration-300">
-                    {social.icon}
-                  </div>
+                  <div className="">{social.icon}</div>
                 </a>
               ))}
             </div>
           </div>
         </div>
 
-         {/* Bottom Section */}
-         <div className="border-t border-white/20 pt-8">
-           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-             <div className="flex items-center gap-4">
-               <div className="relative w-12 h-12 flex-shrink-0">
-                 <Image
-                   src="/Logo.webp"
-                   alt="COESSING Logo"
-                   fill
-                   className="object-contain"
-                 />
-               </div>
-               <div className="text-white/60 text-sm">
-                 <div>© 2025 COESSING. All rights reserved.</div>
-                 <div className="mt-1">Coastal Ocean Environment Summer School in Nigeria and Ghana</div>
-               </div>
-             </div>
-             
-             <div className="text-white/60 text-sm text-center">
-               <div className="mt-2">
-                 Developed by{' '}
-                 <a 
-                   href="https://kr8tos.vercel.app/" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   className="text-secondary_color hover:text-white transition-colors duration-300 font-medium"
-                 >
-                   KR8TOS
-                 </a>
-               </div>
-             </div>
-           </div>
-         </div>
+        {/* Addresses row */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 border-t border-white/15 pt-10 md:pt-12 mb-8">
+          <div className="/60">
+            <div className="uppercase text-xs tracking-wider mb-3">Ghana</div>
+            <div>Accra</div>
+          </div>
+          <div className="/60">
+            <div className="uppercase text-xs tracking-wider mb-3">Nigeria</div>
+            <div>Lagos • Abuja</div>
+          </div>
+          <div className="/60">
+            <div className="uppercase text-xs tracking-wider mb-3">United States</div>
+            <div>University of Michigan,
+              Ann Arbor, MI</div>
+          </div>
+          <div className="/60">
+            <div className="uppercase text-xs tracking-wider mb-3">General inquiries</div>
+            <div>hello@coessing.org</div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-t border-white/15 pt-6">
+          <div className="flex items-center gap-4">
+            <div className="relative w-10 h-10 flex-shrink-0">
+              <Image src="/Logo.webp" alt="COESSING Logo" fill className="object-contain" />
+            </div>
+            <div className="/60 text-sm">© 2025 COESSING. All rights reserved.</div>
+          </div>
+          <div className="/60 text-sm">
+            Built by <a href="https://kr8tos.vercel.app/" target="_blank" rel="noopener noreferrer" className=" hover:opacity-80">KR8TOS</a>
+          </div>
+        </div>
       </div>
     </div>
   )

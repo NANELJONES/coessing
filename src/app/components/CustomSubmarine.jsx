@@ -105,7 +105,7 @@ function SubmarineModel({ scrollProgress }) {
     <group ref={submarineRef} rotation={[0.5, 1, 0.1]} position={[0, 0, 0]}>
       <primitive 
         object={clonedScene} 
-        scale={1.4} 
+        scale={1.3} 
         rotation={[0, 4, 0]}
         ref={modelRef}
         position={[0, 0, 0]}
@@ -117,11 +117,11 @@ function SubmarineModel({ scrollProgress }) {
 // Note: Preload is disabled to avoid cache issues during development
 // Re-enable in production if needed: useGLTF.preload('/3D/compressed submarine.glb')
 
-const CustomSubmarine = ({ scrollProgress }) => {
+const  CustomSubmarine = ({ scrollProgress }) => {
   return (
-    <div className="sticky   top-[70%] translate-y-[-40%]  md:translate-y-0 md:top-[60%] md:left-[50%]  md:translate-x-[-50%] md:w-[700px] h-auto  md:h-full flex items-center justify-center pointer-events-none z-30">
+    <div className="sticky   top-[70%] translate-y-[-40%]  md:translate-y-0 md:top-[60%] md:left-[50%]  md:translate-x-[-50%] w-full h-[300px] md:w-[900px] md:h-[700px] flex items-center justify-center pointer-events-none z-30">
       <Canvas
-        camera={{ position: [0, 0, 7], fov: 60 }}
+        camera={{ position: [0, 0, 5.5], fov: 55 }}
         style={{ background: 'transparent', width: '100%', height: '100%', pointerEvents: 'none' }}
         gl={{ alpha: true, antialias: true }}
       >

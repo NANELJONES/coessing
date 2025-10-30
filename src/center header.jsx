@@ -27,20 +27,19 @@ const Header = () => {
   const isInitializedRef = useRef(false)
   const timerRef = useRef(null)
   const lastTimerImageRef = useRef(0)
-  const [mobileIndex, setMobileIndex] = useState(0)
 
   // Ocean images array
   const oceanImages = [
-    '/gallery/1.jpg',
-    '/Logo.webp', 
-    '/gallery/3.jpg',
-    '/gallery/4.jpg',
-    '/gallery/5.jpg',
-    '/gallery/6.jpg',
-    '/gallery/7.jpg',
-    '/gallery/8.jpg',
-    '/gallery/4.jpg',
-    '/gallery/2.jpg', 
+    '/ocean1.jpg',
+    '/ocean2.jpg', 
+    '/ocean3.jpg',
+    '/ocean4.jpg',
+    '/ocean1.jpg',
+    '/ocean2.jpg',
+    '/ocean3.jpg',
+    '/ocean4.jpg',
+    '/ocean1.jpg',
+    '/ocean2.jpg'
   ]
 
   const threshold = 80
@@ -95,9 +94,7 @@ const Header = () => {
 
   // Show next image in trail
   const showNextImage = () => {
-    // Cycle z-index between 1 and array.length * 2 to prevent unlimited growth
-    const maxZIndex = oceanImages.length * 2
-    zIndexValRef.current = zIndexValRef.current >= maxZIndex ? 1 : zIndexValRef.current + 1
+    zIndexValRef.current++
     imgPositionRef.current = imgPositionRef.current < oceanImages.length - 1 ? imgPositionRef.current + 1 : 0
     
     const randomImage = oceanImages[imgPositionRef.current]
@@ -111,6 +108,7 @@ const Header = () => {
       targetY: mousePosRef.current.y - imageSize / 2,
       image: randomImage,
       zIndex: zIndexValRef.current,
+      scale: 1,
       opacity: 1
     }
     
@@ -120,7 +118,7 @@ const Header = () => {
     setTimeout(() => {
       setTrailImages(prev => prev.map(img => 
         img.id === newTrailImage.id 
-          ? { ...img, x: img.targetX, y: img.targetY, opacity: 0 }
+          ? { ...img, x: img.targetX, y: img.targetY, opacity: 0, scale: 0.2 }
           : img
       ))
     }, 400)
@@ -147,23 +145,14 @@ const Header = () => {
     return () => clearInterval(cleanupInterval)
   }, [])
 
-  // Mobile auto-rotate images (simulate static mouse by cycling images)
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setMobileIndex(prev => (prev + 1) % oceanImages.length)
-    }, 1500)
-
-    return () => clearInterval(intervalId)
-  }, [oceanImages.length])
-
   return (
     <div 
       ref={containerRef}
-      className='flex flex-col max-h-[1000px] justify-between gap-[2em] md:min-h-screen h-auto relative overflow-hidden'
+      className='flex relative flex-col md:items-center justify-between gap-[2em] md:min-h-screen h-auto relative overflow-hidden'
       onMouseMove={handleMouseMove}
     >
       {/* Trail Images */}
-      <div className='hidden md:block absolute inset-0 z-[1] pointer-events-none'>
+      <div className='hidden md:block'>
       {trailImages.map((trailImage) => (
         <div
           key={trailImage.id}
@@ -187,26 +176,18 @@ const Header = () => {
 
     </div>
 
-      <div className='md:hidden block w-full h-[300px] overflow-hidden relative'>
-        {oceanImages.map((src, idx) => (
-          <img
-            key={idx}
-            src={src}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === mobileIndex ? 'opacity-100' : 'opacity-0'}`}
-            alt="Architecture"
-          />
-        ))}
+      <div className='md:hidden block w-full h-[300px] overflow-hidden'>
+        <img src="/architecture_gif.gif" className='w-full h-full object-cover' alt="Architecture"></img>
       </div>
 
 
-      <div className='flex items-center gap-[1em]  absolute left-0 top-0'> 
+<div className='flex items-center gap-[1em]  absolute left-0 top-0'> 
 <div className='w-[100px] h-[2px] bg-white'></div>
 <p className='text-white !text-sm font-thin'>Founded since-2015</p>
 </div>
-
-      <div className='md:absolute text-white flex  p-4  flex-col z-[50] gap-4 md:bottom-[7em] md:left-10 w-full md:w-2/3 relative'>
-        <h1 className='text-4xl md:!text-[3.5em]'>Empowering Tomorrow's Ocean Scientists in West Africa</h1>
-        <h6 className=''>One week immersive summer schools alternating between Ghana and Nigeria uniting researchers, fostering innovation, and amplifying African ocean science leadership</h6>
+      <div className='my-auto items-center  text-white flex flex-col z-[10] gap-4 md:bottom-[6em] md:left-10 w-full md:w-2/3'>
+        <h1 className='text-4xl md:!text-[3.5em] text-center'>Empowering Tomorrow's Ocean Scientists in West Africa</h1>
+        <h6 className='!text-md text-center'>One week immersive summer schools alternating between Ghana and Nigeria uniting researchers, fostering innovation, and amplifying African ocean science leadership</h6>
         <div className='flex gap-4 text-sm'>
           <button>Apply for 2025 School</button>
           <button>Learn More</button>
