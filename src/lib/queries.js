@@ -13,9 +13,6 @@ export const GET_SCHOOLS = gql`
           id
           schoolName
           schoolLocation
-          schoolDetails {
-            raw
-          }
           schoolStatus
           schoolTheme
           schoolYear
@@ -46,6 +43,22 @@ export const GET_SCHOOL_BY_SLUG = gql`
       schoolYear
       slug
       instructors
+    }
+  }
+`
+
+// Lightweight query for school lists (only essential fields)
+export const GET_SCHOOLS_LIST = gql`
+  query GetSchoolsList($first: Int!) {
+    schoolsConnection(first: $first) {
+      edges {
+        node {
+          id
+          schoolName
+          schoolYear
+          slug
+        }
+      }
     }
   }
 `
@@ -117,7 +130,7 @@ export const GET_COMMUNITY_VOICES = gql`
 
 export const GET_TESTIMONIALS = gql`
   query GetTestimonials($first: Int!, $skip: Int!) {
-    testimonialsConnection(first: $first, skip: $skip, orderBy: createdAt_DESC) {
+    testimonialsConnection(first: $first, skip: $skip, orderBy: createdAt_ASC) {
       edges {
         node {
           id
@@ -133,6 +146,22 @@ export const GET_TESTIMONIALS = gql`
         hasPreviousPage
         startCursor
         endCursor
+      }
+    }
+  }
+`
+
+// Query to get all schools for filtering (to extract unique years)
+export const GET_ALL_SCHOOLS_FOR_FILTERS = gql`
+  query GetAllSchoolsForFilters {
+    schoolsConnection(first: 1000) {
+      edges {
+        node {
+          schoolYear
+          country
+          schoolStatus
+          schoolLocation
+        }
       }
     }
   }

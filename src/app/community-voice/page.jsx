@@ -72,7 +72,7 @@ const Page = () => {
    
       {/* Masonry layout via CSS columns */}
       <Layout>
-      <div className="columns_container">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {images.map(({ url, key }) => (
           <a key={key} href={url} target="_blank" rel="noreferrer" className="inline-block w-full mb-4 h-auto break-inside-avoid">
             <Image

@@ -66,8 +66,8 @@ function SubmarineModel({ scrollProgress }) {
       // Map parent scroll progress (~30%) to group Y rotation 2 -> 3
       // Use a soft window [0.25, 0.45] for smoother interpolation
       const p = scrollRef.current || 0
-      const start = 0.25
-      const end = 0.45
+      const start = 0
+      const end = 0.15
       const clamped = Math.max(0, Math.min(1, (p - start) / (end - start)))
       const targetGroupY = 2 + clamped * 1 // 2 -> 3
       // Smoothly approach the target to avoid jitter
@@ -119,7 +119,7 @@ function SubmarineModel({ scrollProgress }) {
 
 const  CustomSubmarine = ({ scrollProgress }) => {
   return (
-    <div className="sticky left-1/2 top-[80%] md:-translate-x-1/4 -translate-y-1/2  w-full h-[300px] md:w-[900px] md:h-[500px] flex items-center justify-center pointer-events-none z-30">
+    <div className="sticky left-2/3 top-[100%] md:top-[80%] md:-translate-x-3/4 -translate-y-1/2  w-full h-[300px] md:w-[900px] md:h-[500px] flex items-center justify-center pointer-events-none z-30">
       <Canvas
         camera={{ position: [0, 0, 5.5], fov: 80 }}
         style={{ background: 'transparent', width: '100%', height: '100%', pointerEvents: 'none' }}

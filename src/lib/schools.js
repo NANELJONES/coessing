@@ -1,5 +1,5 @@
 import { graphcms } from './graphql'
-import { GET_SCHOOLS, GET_SCHOOL_BY_SLUG, GET_GALLERIES_BY_SCHOOL, GET_PARTNERS, GET_COMMUNITY_VOICES, GET_TESTIMONIALS } from './queries'
+import { GET_SCHOOLS, GET_SCHOOL_BY_SLUG, GET_GALLERIES_BY_SCHOOL, GET_PARTNERS, GET_COMMUNITY_VOICES, GET_TESTIMONIALS, GET_SCHOOLS_LIST, GET_ALL_SCHOOLS_FOR_FILTERS } from './queries'
 
 export async function getSchools(limit = 7) {
   try {
@@ -7,6 +7,17 @@ export async function getSchools(limit = 7) {
     return data.schoolsConnection.edges.map(edge => edge.node)
   } catch (error) {
     console.error('Error fetching schools:', error)
+    return []
+  }
+}
+
+// Lightweight function for school lists (only essential fields)
+export async function getSchoolsList(limit = 50) {
+  try {
+    const data = await graphcms.request(GET_SCHOOLS_LIST, { first: limit })
+    return data.schoolsConnection.edges.map(edge => edge.node)
+  } catch (error) {
+    console.error('Error fetching schools list:', error)
     return []
   }
 }
@@ -84,7 +95,8 @@ export async function getTestimonials(first = 10, skip = 0) {
 }
 
 // Helper function to transform school data for the 3D component
-export function transformSchoolData(school) {
+export function 
+transformSchoolData(school) {
   return {
     schoolName: school.schoolName,
     year: school.schoolYear,
@@ -93,10 +105,12 @@ export function transformSchoolData(school) {
     location: school.schoolLocation,
     excerpt: school.excerpt,
     description: school.schoolDetails?.raw ? 
-      school.schoolDetails.raw.children
-        .filter(child => child.type === 'paragraph')
-        .map(para => para.children.map(child => child.text).join(''))
-        .join(' ') : '',
+      (() => {
+        const paragraphs = school.schoolDetails.raw.children.filter(child => child.type === 'paragraph')
+        if (paragraphs.length === 0) return ''
+        const firstPara = paragraphs[0]
+        return firstPara.children.map(child => child.text).join('')
+      })() : '',
     coverImage: school.coverImage?.url || '/architecture_gif.gif',
     country: school.country,
     status: school.schoolStatus,

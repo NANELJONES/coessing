@@ -8,12 +8,12 @@ import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 const Nav = () => {
   const [open, setOpen] = useState(false);
   const [schoolsExpanded, setSchoolsExpanded] = useState(false);
-  const { schools, loading: schoolsLoading } = useSchoolContext();
+  const { schools, loading: schoolsLoading, hasMore, loadingMore, loadMoreSchools } = useSchoolContext();
 
   const nav_options = [
     { nav_name: "Home", nav_link: "/" },
     { nav_name: "Community Voice", nav_link: "/community-voice" },
-    { nav_name: "Register & Apply", nav_link: "https://docs.google.com/forms/d/e/1FAIpQLScabZ-nLb_5q-VL_h4ZePASn3PToqe3W8ZYdw2ovFgMsLhcJg/closedform" },
+    // { nav_name: "Register & Apply", nav_link: "https://docs.google.com/forms/d/e/1FAIpQLScabZ-nLb_5q-VL_h4ZePASn3PToqe3W8ZYdw2ovFgMsLhcJg/closedform" },
 
     { nav_name: "Resources", nav_link: "/resources" },
     { nav_name: "Testimonials", nav_link: "/testimonials" },
@@ -30,7 +30,7 @@ const Nav = () => {
 
   return (
     <div 
-      className="fixed top-0 left-0 w-full z-50"
+      className={`fixed top-0 left-0 w-full z-50 ${open ? 'pointer-events-auto' : 'pointer-events-none'}`}
       data-open={open || undefined}
     >
       {/* Pre-layers (Background layers that slide in first) */}
@@ -54,7 +54,7 @@ const Nav = () => {
       </div>
 
       {/* Header */}
-      <header className={`relative ${open ? 'z-[60]' : 'z-50'} flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8 ${open ? 'bg-gradient-to-r from-primary_color to-transparent backdrop-blur-md' : 'bg-transparent'}`}>
+      <header className={`relative ${open ? 'z-[60]' : 'z-50'} flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8 ${open ? 'bg-gradient-to-r from-primary_color to-transparent backdrop-blur-md' : 'bg-transparent'} pointer-events-auto`}>
           <div className="flex-shrink-0">
             <div className="bg-white p-2 ">
               <img
@@ -138,7 +138,7 @@ const Nav = () => {
             }}
             aria-hidden={!open}
           >
-            <div className="h-full overflow-y-auto overscroll-contain px-8 pt-24 pb-12" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="h-full overflow-y-auto px-8 pt-24 pb-12 pointer-events-auto" style={{ overscrollBehavior: 'contain' }}>
               {/* Navigation Items */}
               <ul className="space-y-4 mb-12">
                 {nav_options.map((item, index) => {
@@ -185,20 +185,32 @@ const Nav = () => {
                           className="overflow-hidden"
                         >
                           <div
-                            onClick={() => setSchoolsExpanded(!schoolsExpanded)}
-                            className="group flex items-center justify-between w-full text-4xl md:text-5xl  text-primary_color hover:text-secondary_color transition-colors duration-200 text-left cursor-pointer"
+                            onMouseEnter={() => setSchoolsExpanded(true)}
+                            onMouseLeave={() => setSchoolsExpanded(false)}
+                            className="group w-full text-left"
                           >
-                            <span className="block">
-                              {String(navIndex + 1).padStart(2, '0')}. Our Schools
-                            </span>
-                            <motion.span
-                              animate={{ rotate: schoolsExpanded ? 180 : 0 }}
-                              transition={{ duration: 0.3 }}
-                              className="ml-4 flex-shrink-0"
-                            >
-                              <HiChevronDown className="w-8 h-8 text-primary_color group-hover:text-secondary_color transition-colors duration-200" />
-                            </motion.span>
-                          </div>
+                            <div className="flex items-center justify-between w-full text-4xl md:text-5xl text-primary_color hover:text-secondary_color transition-colors duration-200">
+                              <Link 
+                                href="/schools"
+                                className="block flex-grow"
+                                onClick={() => setOpen(false)}
+                              >
+                                <span className="block">
+                                  {String(navIndex + 1).padStart(2, '0')}. Our Schools
+                                </span>
+                              </Link>
+                              <motion.span
+                                animate={{ rotate: schoolsExpanded ? 180 : 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="ml-4 flex-shrink-0 cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSchoolsExpanded(!schoolsExpanded);
+                                }}
+                              >
+                                <HiChevronDown className="w-8 h-8 text-primary_color group-hover:text-secondary_color transition-colors duration-200" />
+                              </motion.span>
+                            </div>
                           
                           {/* Expandable Schools List */}
                           <AnimatePresence>
@@ -208,32 +220,46 @@ const Nav = () => {
                                 animate={{ height: 'auto', opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
                                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                                className="overflow-hidden mt-4 ml-8 text-primary_color hover:text-secondary_color "
+                                className="overflow-hidden mt-4 ml-8 text-primary_color"
                               >
                                 <div className="space-y-3 pt-2">
                                   {schoolsLoading ? (
                                     <div className="text-gray-500 text-sm">Loading schools...</div>
                                   ) : schools.length > 0 ? (
-                                    schools
-                                      .sort((a, b) => b.schoolYear - a.schoolYear)
-                                      .map((school) => (
-                                        <motion.div
-                                          key={school.slug}
-                                          initial={{ opacity: 0, x: -20 }}
-                                          animate={{ opacity: 1, x: 0 }}
-                                          exit={{ opacity: 0, x: -20 }}
+                                    <>
+                                      {schools
+                                        .sort((a, b) => b.schoolYear - a.schoolYear)
+                                        .map((school) => (
+                                          <motion.div
+                                            key={school.slug}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -20 }}
+                                            transition={{ duration: 0.2 }}
+                                          >
+                                            <Link
+                                              href={`/schools/${school.slug}`}
+                                              className="block px-2 border-b-2 border-b-primary_color transition-colors duration-200 hover:text-secondary_color"
+                                              onClick={() => setOpen(false)}
+                                            >
+                                              <div className="font-semibold ">{school.schoolName}</div>
+                                              <div className="text-sm mt-1">{school.schoolYear}</div>
+                                            </Link>
+                                          </motion.div>
+                                        ))}
+                                      {hasMore && (
+                                        <motion.button
+                                          onClick={loadMoreSchools}
+                                          disabled={loadingMore}
+                                          className="mt-4 px-4 py-2 bg-primary_color text-white rounded-md hover:bg-secondary_color transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+                                          initial={{ opacity: 0, y: 10 }}
+                                          animate={{ opacity: 1, y: 0 }}
                                           transition={{ duration: 0.2 }}
                                         >
-                                          <Link
-                                            href={`/schools/${school.slug}`}
-                                            className="block px-2 border-b-2 border-b-primary_color transition-colors duration-200"
-                                            onClick={() => setOpen(false)}
-                                          >
-                                            <div className="font-semibold ">{school.schoolName}</div>
-                                            <div className="text-sm mt-1">{school.schoolYear}</div>
-                                          </Link>
-                                        </motion.div>
-                                      ))
+                                          {loadingMore ? 'Loading...' : 'Load More Schools'}
+                                        </motion.button>
+                                      )}
+                                    </>
                                   ) : (
                                     <div className="text-gray-500 text-sm">No schools available</div>
                                   )}
@@ -241,6 +267,7 @@ const Nav = () => {
                               </motion.div>
                             )}
                           </AnimatePresence>
+                          </div>
                         </motion.li>
                       </React.Fragment>
                     );

@@ -15,18 +15,24 @@
 }
 
 body {
- margin: 0;
- padding:0;
- 
+  margin: 0;
+  padding: 0;
+
 }
 
-.columns_container{
+/* .columns_container {
   columns: 3 250px;
+  column-gap: 2rem;
+} */
+
+
+.center-align {
+  text-align: center;
 }
 
-button{
-  @apply text-white  p-4 rounded-full px-6 border border-white   bg-gradient-to-r from-primary_color/50 to-secondary_color/10;
- 
+button {
+  @apply text-white p-4 rounded-full px-6 border border-white bg-gradient-to-r from-primary_color/50 to-secondary_color/10;
+
 }
 
 /* .chrome-border {
@@ -59,15 +65,22 @@ button{
 } */
 
 
-.huge{
+.huge {
   @apply text-white leading-[0.5em] text-[2.5em] lg:text-[5em];
 }
 
-.clip{
+.clip {
   clip-path: polygon(15% 0, 100% 0, 100% 86%, 75% 100%, 0 100%, 0 21%);
 }
+
 /* Responsive Typography */
-h1, h2, h3, h4, h5, h6, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
   margin: 0;
   padding: 0;
 }
@@ -114,19 +127,25 @@ p {
   h1 {
     font-size: 2rem;
   }
+
   h2 {
     font-size: 1.75rem;
   }
+
   h3 {
     font-size: 1.5rem;
   }
+
   h4 {
     font-size: 1.25rem;
   }
+
   h5 {
     font-size: 1rem;
   }
-  h6, p {
+
+  h6,
+  p {
     font-size: 0.875rem;
   }
 }
@@ -135,16 +154,22 @@ p {
   h1 {
     font-size: 1.75rem;
   }
+
   h2 {
     font-size: 1.5rem;
   }
+
   h3 {
     font-size: 1.25rem;
   }
+
   h4 {
     font-size: 1rem;
   }
-  h5, h6, p {
+
+  h5,
+  h6,
+  p {
     font-size: 0.875rem;
   }
 }
@@ -155,6 +180,7 @@ p {
     opacity: 1;
     transform: scale(1);
   }
+
   100% {
     opacity: 0;
     transform: scale(0.3) translateY(-50px);
@@ -163,4 +189,36 @@ p {
 
 .animate-trail-fade {
   animation: trailFade 3s ease-out forwards;
+}
+
+.break-inside-avoid {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.break-after-avoid {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.image_grid {
+  column-count: 1;
+  column-gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .image_grid {
+    column-count: 2;
+  }
+}
+
+.image_grid>* {
+  break-inside: avoid;
+  margin-bottom: 2rem;
+}
+
+.image_grid img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 400px !important;
 }

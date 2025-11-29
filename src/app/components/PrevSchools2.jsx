@@ -65,7 +65,9 @@ const SchoolCard = ({ school, scrollProgress, index, totalCards }) => {
   )
   
   const handleClick = () => {
-    router.push(`/schools/${school.slug}`)
+    if (school?.slug) {
+      router.push(`/schools/${school.slug}`)
+    }
   }
   
   return (
@@ -91,28 +93,28 @@ const SchoolCard = ({ school, scrollProgress, index, totalCards }) => {
           {/* Inner glow */}
           <div className="absolute inset-[1px] bg-gradient-to-br from-white/10 to-transparent  pointer-events-none opacity-50"></div>
           
-          <div className="relative flex flex-col md:flex-row gap-12 z-10">
+          <div className="relative flex flex-col-reverse md:flex-row-reverse gap-12 z-10">
             {/* Left Side - Text Content */}
             <div className="flex-1 space-y-2 w-full">
               {/* Year - Large and prominent */}
               <div className="text-9xl text-white  leading-none">
-                {school.year}
+                {school?.year || ''}
               </div>
               
               {/* School Name */}
               <h3 className="text-4xl font-light text-white leading-tight ">
-                {school.schoolName}
+                {school?.schoolName || ''}
               </h3>
               
               {/* Location */}
               <div className="flex items-center gap-3 text-white/80 text-sm font-normal tracking-wide">
                 <HiLocationMarker className="w-5 h-5 text-white/60" />
-                <span>{school.location}</span>
+                <span>{school?.location || ''}</span>
               </div>
               
               {/* Excerpt */}
               <p className="text-white !text-sm leading-relaxed max-w-md font-light">
-                {school.excerpt.substring(0, 150)}...
+                {school.excerpt ? `${school.excerpt.substring(0, 150)}...` : ''}
               </p>
               
               {/* Read More Button - Glass style */}
@@ -125,14 +127,14 @@ const SchoolCard = ({ school, scrollProgress, index, totalCards }) => {
             </div>
             
             {/* Right Side - Image with glass frame */}
-            <div className="relative w-full md:w-[380px] h-[180px] md:h-full overflow-hidden flex-shrink-0 border border-white/20 shadow-xl">
+            <div className="relative w-full md:w-[380px] h-[180px] md:h-full min-h-[200px] overflow-hidden flex-shrink-0 border border-white/20 shadow-xl">
               <img 
-                src={school.coverImage} 
-                alt={school.schoolName}
+                src={school?.coverImage || ''} 
+                alt={school?.schoolName || 'School Image'}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
               {/* Glass overlay on image */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>
+
             </div>
           </div>
         </div>
@@ -215,10 +217,10 @@ const PrevSchools2 = () => {
       
       {/* Fixed Title */}
       <div className="absolute top-8 left-8 z-40 pointer-events-none">
-        <h1 className=" !text-[5em] text-white font-light ">Previous Schools</h1>
+        <h1 className=" md:!text-[5em] text-white font-light ">Previous Schools</h1>
       </div>
 
-      <CustomSubmarine scrollProgress={scrollYProgress} />
+      <CustomSubmarine scrollProgress={rawScrollProgress} />
 
       {/* Sticky container for cards - 3D Stack Effect */}
       <div 
