@@ -33,16 +33,16 @@ const Header = () => {
 
   // Ocean images array
   const oceanImages = [
-    '/gallery/1.jpg',
+    '/gallery/1.JPG',
     '/gallery/9.jpg', 
-    '/gallery/3.jpg',
-    '/gallery/4.jpg',
-    '/gallery/5.jpg',
+    '/gallery/3.JPG',
+    '/gallery/4.JPG',
+    '/gallery/5.JPG',
     '/gallery/6.jpg',
     '/gallery/7.jpg',
     '/gallery/8.jpg',
-    '/gallery/4.jpg',
-    '/gallery/2.jpg', 
+    '/gallery/4.JPG',
+    '/gallery/2.JPG', 
   ]
 
   const threshold = 80
