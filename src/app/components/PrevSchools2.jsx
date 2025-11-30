@@ -93,7 +93,7 @@ const SchoolCard = ({ school, scrollProgress, index, totalCards }) => {
           {/* Inner glow */}
           <div className="absolute inset-[1px] bg-gradient-to-br from-white/10 to-transparent  pointer-events-none opacity-50"></div>
           
-          <div className="relative flex flex-col-reverse md:flex-row-reverse gap-12 z-10">
+          <div className="relative flex flex-col  md:flex-row-reverse gap-12 z-10">
             {/* Left Side - Text Content */}
             <div className="flex-1 space-y-2 w-full">
               {/* Year - Large and prominent */}
@@ -127,11 +127,11 @@ const SchoolCard = ({ school, scrollProgress, index, totalCards }) => {
             </div>
             
             {/* Right Side - Image with glass frame */}
-            <div className="relative w-full md:w-[380px] h-[180px] md:h-full min-h-[200px] overflow-hidden flex-shrink-0 border border-white/20 shadow-xl">
+            <div className="relative w-full md:w-[380px] h-[180px] md:h-full min-h-[200px] max-h-[350px] overflow-hidden flex-shrink-0 border border-white/20 shadow-xl">
               <img 
                 src={school?.coverImage || ''} 
                 alt={school?.schoolName || 'School Image'}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                className="w-full h-full object-cover group-hover:scale-110  transition-transform duration-700"
               />
               {/* Glass overlay on image */}
 

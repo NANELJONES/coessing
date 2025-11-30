@@ -123,6 +123,13 @@ p {
   line-height: 1.8;
 }
 
+
+@layer layout {
+  .layout {
+    @apply mx-auto w-full max-w-[1200px] pt-[2.5rem] pb-[2.5rem];
+  }
+}
+
 @media (max-width: 768px) {
   h1 {
     font-size: 2rem;

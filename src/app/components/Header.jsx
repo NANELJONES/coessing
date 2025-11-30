@@ -1,5 +1,7 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 // Helper functions
 const getLocalPointerPos = (ev, rect) => ({
@@ -32,7 +34,7 @@ const Header = () => {
   // Ocean images array
   const oceanImages = [
     '/gallery/1.jpg',
-    '/Logo.webp', 
+    '/gallery/9.jpg', 
     '/gallery/3.jpg',
     '/gallery/4.jpg',
     '/gallery/5.jpg',
@@ -51,14 +53,6 @@ const Header = () => {
       const rect = containerRef.current.getBoundingClientRect()
       const newPosition = getLocalPointerPos(e, rect)
       mousePosRef.current = newPosition
-      
-      // Initialize cache position on first move
-      if (!isInitializedRef.current) {
-        cacheMousePosRef.current = { ...newPosition }
-        isInitializedRef.current = true
-        startRender()
-        startTimer()
-      }
     }
   }
 
@@ -126,8 +120,22 @@ const Header = () => {
     }, 400)
   }
 
-  // Cleanup
+  // Initialize and Auto-start
   useEffect(() => {
+    // Set initial position to center of screen
+    if (typeof window !== 'undefined') {
+      const centerX = window.innerWidth / 2
+      const centerY = window.innerHeight / 2
+      
+      mousePosRef.current = { x: centerX, y: centerY }
+      lastMousePosRef.current = { x: centerX, y: centerY }
+      cacheMousePosRef.current = { x: centerX, y: centerY }
+      
+      // Start animations immediately
+      startRender()
+      startTimer()
+    }
+
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current)
@@ -136,6 +144,7 @@ const Header = () => {
         clearInterval(timerRef.current)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Clean up trail images after animation
@@ -156,6 +165,30 @@ const Header = () => {
     return () => clearInterval(intervalId)
   }, [oceanImages.length])
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 1.2,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }
+  }
+
   return (
     <div 
       ref={containerRef}
@@ -171,10 +204,8 @@ const Header = () => {
           style={{
             left: trailImage.x,
             top: trailImage.y,
-            
             zIndex: trailImage.zIndex,
             opacity: trailImage.opacity,
-       
           }}
         >
           <img 
@@ -200,18 +231,40 @@ const Header = () => {
 
 
       <div className='flex items-center gap-[1em]  absolute left-0 top-0'> 
-<div className='w-[100px] h-[2px] bg-white'></div>
-<p className='text-white !text-sm font-thin'>Founded since-2015</p>
-</div>
-
-      <div className='md:absolute text-white flex  p-4  flex-col z-[50] gap-4 md:bottom-[7em] md:left-10 w-full md:w-2/3 relative'>
-        <h1 className='text-4xl md:!text-[3.5em]'>Empowering Tomorrow's Ocean Scientists in West Africa</h1>
-        <h6 className=''>One week immersive summer schools alternating between Ghana and Nigeria uniting researchers, fostering innovation, and amplifying African ocean science leadership</h6>
-        <div className='flex gap-4 text-sm'>
-          <button>Apply for 2025 School</button>
-          <button>Learn More</button>
-        </div>
+        <div className='w-[100px] h-[2px] bg-white'></div>
+        <p className='text-white !text-sm font-thin'>Founded since-2015</p>
       </div>
+
+      <motion.div 
+        className='md:absolute text-white flex  p-4  flex-col z-[50] gap-4 md:bottom-[7em] md:left-10 w-full md:w-2/3 relative'
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.h1 
+          className='text-4xl md:!text-[3.5em]'
+          variants={itemVariants}
+        >
+          Empowering Tomorrow's Ocean Scientists in West Africa
+        </motion.h1>
+        <motion.h6 
+          className=''
+          variants={itemVariants}
+        >
+          One week immersive summer schools alternating between Ghana and Nigeria uniting researchers, fostering innovation, and amplifying African ocean science leadership
+        </motion.h6>
+        <motion.div 
+          className='flex gap-4 text-sm'
+          variants={itemVariants}
+        >
+          <Link href='/schools'>
+            <button className="hover:opacity-80 transition-opacity">Our Schools</button>
+          </Link> 
+          <Link href='/aboutUs' className="hover:opacity-80 transition-opacity">
+         <button>Get to know us</button>
+          </Link>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

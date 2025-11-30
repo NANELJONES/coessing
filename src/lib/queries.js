@@ -2,7 +2,7 @@ import { gql } from 'graphql-request'
 
 export const GET_SCHOOLS = gql`
   query GetSchools($first: Int!) {
-    schoolsConnection(first: $first) {
+    schoolsConnection(first: $first, orderBy: schoolYear_DESC) {
       edges {
         node {
           country
@@ -50,7 +50,7 @@ export const GET_SCHOOL_BY_SLUG = gql`
 // Lightweight query for school lists (only essential fields)
 export const GET_SCHOOLS_LIST = gql`
   query GetSchoolsList($first: Int!) {
-    schoolsConnection(first: $first) {
+    schoolsConnection(first: $first, orderBy: schoolYear_DESC) {
       edges {
         node {
           id
