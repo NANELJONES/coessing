@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { HiLocationMarker } from 'react-icons/hi'
 import { useRouter } from 'next/navigation'
 import { getSchools, transformSchoolData } from '@/lib/schools'
-import CustomSubmarine from './CustomSubmarine'
+// import CustomSubmarine from './CustomSubmarine'
 // import Submarine from './Submarine'
 
 // School Card Component with 3D-like effect using transforms
@@ -220,7 +220,7 @@ const PrevSchools2 = () => {
         <h1 className=" md:!text-[5em] text-white font-light ">Previous Schools</h1>
       </div>
 
-      <CustomSubmarine scrollProgress={rawScrollProgress} />
+      {/* <CustomSubmarine scrollProgress={rawScrollProgress} /> */}
 
       {/* Sticky container for cards - 3D Stack Effect */}
       <div 

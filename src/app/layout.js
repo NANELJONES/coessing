@@ -22,7 +22,7 @@ const poppins = Poppins({
 
 
 export const metadata = {
-  title: "Plastic Punch",
+  title: "Coessing",
   description: "An NGO dedicated to the fighting against plastic pollution",
 };
 

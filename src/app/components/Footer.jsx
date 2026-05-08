@@ -50,7 +50,7 @@ const Footer = () => {
             <a href="/resources" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Resources</a>
           </div>
           <div className="space-y-5">
-            <a href="/schools/ghana" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Schools</a>
+            <a href="/schools" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Schools</a>
             <a href="/community-voice" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Community</a>
             <a href="/testimonials" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Testimonials</a>
           </div>
