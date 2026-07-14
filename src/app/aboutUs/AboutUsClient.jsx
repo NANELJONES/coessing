@@ -237,7 +237,6 @@ const AboutUsClient = () => {
     "University of Michigan",
     "Regional Maritime University (RMU)",
     "International Centre for Theoretical Physics",
-    "Gordon and Betty Moore Foundation",
     "US Office of Naval Research",
     "Schmidt Sciences"
   ]
@@ -364,21 +363,35 @@ const AboutUsClient = () => {
   }
 
 
+  const HistoryHighlights = () => {
+    const highlights = [
+      "Since 2015, COESSING has offered one-week programs in Ghana and Nigeria",
+      "Expanded to Kenya in 2025",
+      "Combines lectures, projects, and collaboration under the UN Decade of Ocean Science",
+    ]
+
+    return (
+      <div className='flex flex-col gap-[1.5em]'>
+        <h1 className='!text-[4em]'>History</h1>
+        <ul className='flex flex-col gap-4 list-disc list-inside text-white/90'>
+          {highlights.map((item, index) => (
+            <li key={index} className='leading-relaxed'>{item}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
   const BackgroundHistory = () => {
     return (
       <div className='flex flex-col gap-[2em]'>
         <img src="/ocean1.jpg" alt="background history" className='w-full h-full max-h-[400px]  object-cover' />
         <h1>Background History</h1>
-<div className='grid grid-cols-1  lg:grid-cols-3 gap-[2em]'>
-<p>The Coastal Ocean Environment Summer School In Nigeria and Ghana began with an exploratory “scouting trip” made in August 2014 by Professor Brian K. Arbic  and Research Scientist Dr. Joseph Ansong of the University of Michigan to the University of Ghana (UG), Regional Maritime University (RMU), the Department of Fisheries and Aquatic Sciences in the University of Cape Coast (UCC), and several departments at the Kwame Nkrumah University of Science and Technology (KNUST).  Together with our Ghanaian and Nigerian colleagues, we have held summer schools every year since 2015. As COESSING enters its tenth year we remain true to our vision, mission, and five core values.</p>
-
-<p>In-person schools have been held annually in Ghana from 2015-2019, and in 2023. In 2022 and 2024, in-person schools were held in Nigeria. We held online schools in the years 2020-2023. For the next four years (2025-2028) we plan to alternate in-person schools between Ghana (odd years) and Nigeria (even years).</p> 
-
-<p>Arbic was a US Peace Corps Volunteer Secondary Math and Physics Teacher at Damongo Secondary School from 1990-1992.  Ansong was a student in Arbic’s Damongo classroom and worked as a postdoc in Arbic’s lab at University of Michigan from 2011-2017.  Ansong returned to Ghana, as a faculty member in the UG Department of Mathematics, in 2017.  Some background on Arbic and Ansong’s time together in Ghana in the 1990s and 2010s can be found here.  Another participating US professor, Emily Shroyer of Oregon State University, was also a Peace Corps Volunteer Teacher in Ghana (Half Assini Secondary School, 2001-2003).</p> 
-   
-</div>
-   
-   
+        <div className='grid grid-cols-1 lg:grid-cols-1 gap-[2em] max-w-4xl'>
+          <p>
+            COESSING is a one-week summer school that has taken place yearly since 2015 with the goal of educating and inspiring West African scientists at all career stages to pursue ocean-related fields. From 2015-2019 COESSING was held in Ghana, from 2020-2021 it was held virtually, and in 2022 it was held in Nigeria, which demonstrates that the summer school concept can be successful in multiple countries and formats. From 2023 onwards the school has alternated between Ghana (2023, 2025) and Nigeria (2026). COESSING is one example of the exchange modalities that will be supported by Ocean Corps. COESSING is an endorsed UN Ocean Decade Project.
+          </p>
+        </div>
       </div>
     )
   }
@@ -761,13 +774,14 @@ const AboutUsClient = () => {
         </motion.p>
       </div>
 <div className='col-span-3 lg:pl-[3em] px-2 flex flex-col gap-[2em] mb-[5em]'>
+  <HistoryHighlights />
   <BackgroundHistory />
   <Timeline />
   <ParticipantsInitiatives />
   <CoessingSuccess />
   <PressContent />
   <FundingPartners />
-  <Partners/>
+  {/* <Partners/> */}
   {/* <Statistics /> */}
   
 

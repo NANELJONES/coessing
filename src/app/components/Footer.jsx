@@ -17,7 +17,7 @@ const Footer = () => {
     },
     {
       name: 'LinkedIn',
-      url: 'https://www.linkedin.com/mwlite/company/coastal-ocean-environment-summer-school-in-nigeria-and-ghana',
+      url: 'https://www.linkedin.com/company/coastal-ocean-environment-summer-school-in-nigeria-and-ghana/',
       icon: <FaLinkedin className="w-6 h-6" />
     },
     {
@@ -57,7 +57,7 @@ const Footer = () => {
           <div>
             <div className="/70 uppercase tracking-wide text-sm mb-6">Say Hello</div>
             <div className="space-y-4 /90">
-              <div className="flex items-center gap-3"><HiMail className="w-5 h-5 /70" /><span>hello@coessing.org</span></div>
+              <div className="flex items-center gap-3"><HiMail className="w-5 h-5 /70" /><span>COESSING@GMAIL.COM</span></div>
               <div className="flex items-center gap-3"><HiPhone className="w-5 h-5 /70" /><span>+1 (555) 123-4567</span></div>
               <div className="flex items-start gap-3"><HiLocationMarker className="w-5 h-5 /70 mt-1" /><div>
                 <p>University of Michigan</p>
@@ -99,7 +99,7 @@ const Footer = () => {
           </div>
           <div className="/60">
             <div className="uppercase text-xs tracking-wider mb-3">General inquiries</div>
-            <div>hello@coessing.org</div>
+            <div> <a href="mailto:COESSING@GMAIL.COM  ">COESSING@GMAIL.COM  </a>          </div>
           </div>
         </div>
 
@@ -109,7 +109,7 @@ const Footer = () => {
             <div className="relative w-10 h-10 flex-shrink-0">
               <Image src="/Logo.webp" alt="COESSING Logo" fill className="object-contain" />
             </div>
-            <div className="/60 text-sm">© 2025 COESSING. All rights reserved.</div>
+            <div className="/60 text-sm">© {new Date().getFullYear()} COESSING. All rights reserved.</div>
           </div>
           <div className="/60 text-sm">
             Built by <a href="https://kr8tos.vercel.app/" target="_blank" rel="noopener noreferrer" className=" hover:opacity-80">KR8TOS</a>

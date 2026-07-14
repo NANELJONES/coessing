@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSchoolContext } from '@/contexts/SchoolContext';
@@ -10,19 +10,18 @@ const Nav = () => {
   const [schoolsExpanded, setSchoolsExpanded] = useState(false);
   const { schools, loading: schoolsLoading, hasMore, loadingMore, loadMoreSchools } = useSchoolContext();
 
+  // Menu hierarchy: Home → About Us → Our Schools → Community Voice → Testimonials
   const nav_options = [
     { nav_name: "Home", nav_link: "/" },
-    { nav_name: "Community Voice", nav_link: "/community-voice" },
-    { nav_name: "Resources", nav_link: "/resources" },
-    { nav_name: "Testimonials", nav_link: "/testimonials" },
     { nav_name: "About Us", nav_link: "/aboutUs" },
+    { nav_name: "Our Schools", nav_link: "/schools", isSchools: true },
+    { nav_name: "Community Voice", nav_link: "/community-voice" },
+    { nav_name: "Testimonials", nav_link: "/testimonials" },
   ];
 
   const toggleMenu = useCallback(() => {
     setOpen(prev => !prev);
   }, []);
-
-
 
   return (
     <div 
@@ -32,13 +31,6 @@ const Nav = () => {
       {/* Header */}
       <header className={`relative ${open ? 'z-[60]' : 'z-50'} flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8 bg-transparent pointer-events-auto`}>
           <div className="flex-shrink-0">
-            {/* <Link href="/" className="block bg-white p-2">
-              <img
-                src="/Logo.webp"
-                alt="Company Logo"
-                className="w-20"
-              />
-            </Link> */}
           </div>
 
         {/* Menu Toggle div */}
@@ -48,8 +40,6 @@ const Nav = () => {
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
         >
-
-          
           {/* Menu State - Horizontal Layout */}
           <AnimatePresence mode="wait">
             {!open && (
@@ -75,7 +65,6 @@ const Nav = () => {
 
           {/* Close State - Horizontal Layout */}
           <AnimatePresence mode="wait">
-            
             {open && (
               <motion.div
                 key="close"
@@ -116,78 +105,63 @@ const Nav = () => {
             }}
             aria-hidden={!open}
           >
-
-                 <div className="flex-shrink-0">
-            <Link href="/" className="block bg-white p-2">
-              <img
-                src="/Logo.webp"
-                alt="Company Logo"
-                className="w-full max-w-[200px]"
-              />
-            </Link>
-          </div>
+            <div className="flex-shrink-0">
+              <Link href="/" className="block bg-white p-2">
+                <img
+                  src="/Logo.webp"
+                  alt="Company Logo"
+                  className="w-full max-w-[200px]"
+                />
+              </Link>
+            </div>
             <div className="h-full overflow-y-auto px-8 pt-10 pb-12 pointer-events-auto" style={{ overscrollBehavior: 'contain' }} data-lenis-prevent>
-             
-             
               {/* Navigation Items */}
               <ul className="space-y-4 mb-12">
-              
                 {nav_options.map((item, index) => {
                   const navIndex = index + 1;
-                  
-                  // Insert "Our Schools" after "Community Voice" (index 1) to match previous logic roughly or just keep order
-                  // The previous code had a specific insertion logic. Let's simplify or keep it.
-                  // Previous logic: insert at index 3 (after Register & Apply).
-                  // Current list: Home, Community Voice, Resources, Testimonials, About Us.
-                  // Let's insert "Our Schools" after "Community Voice" (index 1) to make it prominent? 
-                  // Or stick to the list order. The user removed "Register & Apply".
-                  // Let's place "Our Schools" after "Community Voice" as item 3.
-                  
-                  if (navIndex === 3) {
-                     // This is where we inject Our Schools
-                     return (
-                      <React.Fragment key={`fragment-${index}`}>
-                         {/* Our Schools - Expandable Nav Item */}
-                         <motion.li
-                          key="our-schools"
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: 20, opacity: 0 }}
-                          transition={{ 
-                            duration: 0.5,
-                            delay: 0.1 + (index * 0.05),
-                            ease: [0.16, 1, 0.3, 1]
-                          }}
-                          className="overflow-hidden"
+
+                  if (item.isSchools) {
+                    return (
+                      <motion.li
+                        key="our-schools"
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 20, opacity: 0 }}
+                        transition={{ 
+                          duration: 0.5,
+                          delay: 0.1 + (index * 0.05),
+                          ease: [0.16, 1, 0.3, 1]
+                        }}
+                        className="overflow-hidden"
+                      >
+                        <div
+                          onMouseEnter={() => setSchoolsExpanded(true)}
+                          onMouseLeave={() => setSchoolsExpanded(false)}
+                          className="group w-full text-left"
                         >
-                          <div
-                            onMouseEnter={() => setSchoolsExpanded(true)}
-                            onMouseLeave={() => setSchoolsExpanded(false)}
-                            className="group w-full text-left"
-                          >
-                            <div className="flex items-center justify-between w-full text-4xl md:text-5xl text-primary_color hover:text-secondary_color transition-colors duration-200">
-                              <Link 
-                                href="/schools"
-                                className="block flex-grow"
-                                onClick={() => setOpen(false)}
-                              >
-                                <span className="block">
-                                  {String(navIndex).padStart(2, '0')}. Our Schools
-                                </span>
-                              </Link>
-                              <motion.span
-                                animate={{ rotate: schoolsExpanded ? 180 : 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="ml-4 flex-shrink-0 cursor-pointer"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSchoolsExpanded(!schoolsExpanded);
-                                }}
-                              >
-                                <HiChevronDown className="w-8 h-8 text-primary_color group-hover:text-secondary_color transition-colors duration-200" />
-                              </motion.span>
-                            </div>
-                          
+                          <div className="flex items-center justify-between w-full text-4xl md:text-5xl text-primary_color hover:text-secondary_color transition-colors duration-200">
+                            <Link 
+                              href="/schools"
+                              className="block flex-grow"
+                              onClick={() => setOpen(false)}
+                            >
+                              <span className="block">
+                                {String(navIndex).padStart(2, '0')}. Our Schools
+                              </span>
+                            </Link>
+                            <motion.span
+                              animate={{ rotate: schoolsExpanded ? 180 : 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="ml-4 flex-shrink-0 cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSchoolsExpanded(!schoolsExpanded);
+                              }}
+                            >
+                              <HiChevronDown className="w-8 h-8 text-primary_color group-hover:text-secondary_color transition-colors duration-200" />
+                            </motion.span>
+                          </div>
+                        
                           {/* Expandable Schools List */}
                           <AnimatePresence>
                             {schoolsExpanded && (
@@ -243,38 +217,11 @@ const Nav = () => {
                               </motion.div>
                             )}
                           </AnimatePresence>
-                          </div>
-                        </motion.li>
-
-                        {/* The actual item for this index (Resources) */}
-                        <motion.li
-                          key={item.nav_name}
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: 20, opacity: 0 }}
-                          transition={{ 
-                            duration: 0.5,
-                            delay: 0.1 + ((index + 1) * 0.05),
-                            ease: [0.16, 1, 0.3, 1]
-                          }}
-                          className="overflow-hidden text-primary_color hover:text-secondary_color "
-                        >
-                          <Link
-                            href={item.nav_link}
-                            className="block text-4xl md:text-5xl  text-primary_color hover:text-secondary_color transition-colors duration-200"
-                            onClick={() => setOpen(false)}
-                          >
-                            <span className="block">
-                              {String(navIndex + 1).padStart(2, '0')}. {item.nav_name}
-                            </span>
-                          </Link>
-                        </motion.li>
-                      </React.Fragment>
-                     )
+                        </div>
+                      </motion.li>
+                    );
                   }
 
-                  // Standard items
-                  const displayIndex = index < 2 ? navIndex : navIndex + 1;
                   return (
                     <motion.li
                       key={item.nav_name}
@@ -294,7 +241,7 @@ const Nav = () => {
                         onClick={() => setOpen(false)}
                       >
                         <span className="block">
-                          {String(displayIndex).padStart(2, '0')}. {item.nav_name}
+                          {String(navIndex).padStart(2, '0')}. {item.nav_name}
                         </span>
                       </Link>
                     </motion.li>

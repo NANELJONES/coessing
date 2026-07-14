@@ -119,7 +119,6 @@ const Partners = () => {
                   <li>• University of Michigan</li>
                   <li>• Regional Maritime University (RMU)</li>
                   <li>• International Centre for Theoretical Physics</li>
-                  <li>• Gordon and Betty Moore Foundation</li>
                   <li>• US Office of Naval Research</li>
                   <li>• Schmidt Sciences</li>
                 </ul>

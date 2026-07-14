@@ -65,7 +65,7 @@ const Page = () => {
     <div className="min-h-screen w-full px-4 md:px-8 py-12 bg-gradient-to-b from-primary_color to-[#103F56]">
 <div className='flex flex-col items-start w-full lg:flex-row gap-4'>
 <h1 className="text-white !text-[2em] md:!text-[5em] mb-6">Our Community Voices</h1>
-<p className="text-white/80 text-sm mb-6">Scroll through the community voices of the students and teachers of the West African Science Academy.</p>
+<p className="text-white/80 text-sm mb-6">Scroll through the community voices of the students and teachers of COESSING.</p>
    
    
 </div>
