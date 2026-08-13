@@ -1,5 +1,5 @@
 import { graphcms } from './graphql'
-import { GET_SCHOOLS, GET_SCHOOL_BY_SLUG, GET_GALLERIES_BY_SCHOOL, GET_PARTNERS, GET_COMMUNITY_VOICES, GET_TESTIMONIALS, GET_SCHOOLS_LIST, GET_ALL_SCHOOLS_FOR_FILTERS } from './queries'
+import { GET_SCHOOLS, GET_SCHOOL_BY_SLUG, GET_GALLERIES_BY_SCHOOL, GET_PARTNERS, GET_SCHOOL_PARTNERS, GET_COMMUNITY_VOICES, GET_TESTIMONIALS, GET_SCHOOLS_LIST, GET_ALL_SCHOOLS_FOR_FILTERS } from './queries'
 
 export async function getSchools(limit = 7) {
   try {
@@ -59,6 +59,16 @@ export async function getPartners() {
   }
 }
 
+export async function getSchoolPartners() {
+  try {
+    const data = await graphcms.request(GET_SCHOOL_PARTNERS)
+    return data.schoolPartnersConnection.edges.map(edge => edge.node)
+  } catch (error) {
+    console.error('Error fetching school partners:', error)
+    return []
+  }
+}
+
 export async function getCommunityVoices(first = 10, skip = 0) {
   try {
     const data = await graphcms.request(GET_COMMUNITY_VOICES, { first, skip })
@@ -114,6 +124,10 @@ transformSchoolData(school) {
     coverImage: school.coverImage?.url || '/architecture_gif.gif',
     country: school.country,
     status: school.schoolStatus,
-    instructors: school.instructors || []
+    instructors: school.instructors || [],
+    partners: (school.partners || []).map((partner) => ({
+      name: partner.partnerName || partner.schoolName || '',
+      logo: partner.partnerLogo?.url || partner.logo?.url || null,
+    })),
   }
 }

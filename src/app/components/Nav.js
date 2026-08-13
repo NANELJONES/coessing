@@ -250,19 +250,21 @@ const Nav = () => {
               </ul>
 
               {/* Contact Us div */}
-              <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 25 }}
-                transition={{ 
-                  duration: 0.5,
-                  delay: 0.4,
-                  ease: [0.65, 0, 0.35, 1]
-                }}
-                className="w-full bg-primary_color text-white px-6 py-4 rounded-full text-lg font-medium hover:bg-opacity-90 transition-colors duration-200 text-center cursor-pointer"
-              >
-                Contact Us
-              </motion.div>
+              <Link href="/contact" onClick={() => setOpen(false)}>
+                <motion.div
+                  initial={{ opacity: 0, y: 25 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 25 }}
+                  transition={{ 
+                    duration: 0.5,
+                    delay: 0.4,
+                    ease: [0.65, 0, 0.35, 1]
+                  }}
+                  className="w-full bg-primary_color text-white px-6 py-4 rounded-full text-lg font-medium hover:bg-opacity-90 transition-colors duration-200 text-center cursor-pointer"
+                >
+                  Contact Us
+                </motion.div>
+              </Link>
             </div>
           </motion.aside>
         )}

@@ -43,6 +43,12 @@ export const GET_SCHOOL_BY_SLUG = gql`
       schoolYear
       slug
       instructors
+      partners {
+        partnerName
+        partnerLogo {
+          url
+        }
+      }
     }
   }
 `
@@ -103,6 +109,21 @@ export const GET_PARTNERS = gql`
           partnerLogo {
             url
           }
+        }
+      }
+    }
+  }
+`
+
+export const GET_SCHOOL_PARTNERS = gql`
+  query GetSchoolPartners {
+    schoolPartnersConnection {
+      edges {
+        node {
+          logo {
+            url
+          }
+          schoolName
         }
       }
     }

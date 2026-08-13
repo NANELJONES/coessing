@@ -7,7 +7,88 @@ import { motion, useTransform, useScroll, useSpring } from 'framer-motion'
 
 const PAGE_SIZE = 10
 
-const SchoolsPage = () => {
+const SchoolsGridLayout = () => {
+  const [schools, setSchools] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const response = await fetch(`/api/schools?limit=50&skip=0`)
+        const data = await response.json()
+        if (data.success) {
+          setSchools(data.data)
+        }
+      } catch (err) {
+        console.error('Error fetching schools:', err)
+        setSchools([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSchools()
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-primary_color to-[#103F56] w-full px-4 md:px-8 py-16">
+      <h1 className="text-white !text-[2.5em] md:!text-[4em] leading-none mb-3">
+        Our Schools
+      </h1>
+      <p className="text-white/80 text-sm md:text-base max-w-xl mb-10">
+        Explore our past and upcoming coastal ocean environment summer schools across Nigeria and Ghana.
+      </p>
+
+      {loading ? (
+        <div className="flex justify-center py-16">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+        </div>
+      ) : schools.length === 0 ? (
+        <p className="text-white/70">No schools found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {schools.map((school) => (
+            <Link
+              key={school.id || school.slug}
+              href={`/schools/${school.slug}`}
+              className="group relative border border-white/20 hover:border-white/40 overflow-hidden transition-colors"
+            >
+              <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
+                {school.coverImage?.url ? (
+                  <Image
+                    src={school.coverImage.url}
+                    alt={school.schoolName || 'School'}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white/20">
+                    No Image
+                  </div>
+                )}
+              </div>
+
+              <div className="p-5 space-y-2 bg-white/10 backdrop-blur-md">
+                <p className="text-white/80 text-sm">{school.schoolYear || ''}</p>
+                <h5 className="text-white text-2xl leading-tight group-hover:text-secondary_color transition-colors">
+                  {school.schoolName || ''}
+                </h5>
+                {school.schoolLocation && (
+                  <div className="flex items-center gap-2 text-white/80 text-sm">
+                    <HiLocationMarker className="w-4 h-4 shrink-0" />
+                    <span>{school.schoolLocation}</span>
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+const SchoolsTimelineLayout = () => {
   const [schools, setSchools] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -370,6 +451,11 @@ const SchoolsPage = () => {
       </div>
     </div>
   )
+}
+
+const SchoolsPage = () => {
+  return <SchoolsGridLayout />
+  // return <SchoolsTimelineLayout />
 }
 
 export default SchoolsPage

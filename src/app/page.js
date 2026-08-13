@@ -1,12 +1,15 @@
 import  Header from "./components/Header"
 import MissionAndVision from "./components/MissionAndVision"
-import PrevSchools from "./components/PrevSchools"
-import PrevSchools2 from "./components/PrevSchools2"
+import PrevSchoolsGrid from "./components/PrevSchoolsGrid"
 import OcenVibes from "./components/OcenVibes"
 import AboutUs from "./components/AboutUs"
 import WhyAttend from "./components/WhyAttend"
 import ReachOut from "./components/ReachOut"
+import AppreciatedPartner from "./components/AppreciatedPartner"
+import SchoolPartners from "./components/SchoolPartners"
 import Partners from "./components/Partners"
+import AffiliatedActions from "./components/AffiliatedActions"
+import FeaturedMentions from "./components/FeaturedMentions"
 import OceanWaves from "./components/OceanWaves"
 import Layout from "./components/Layout"
 
@@ -19,10 +22,14 @@ export default function Home() {
       <Header/>
       <AboutUs/>
       <MissionAndVision/>
-      <PrevSchools2/>
+      <PrevSchoolsGrid/>
       <OcenVibes/>
       <WhyAttend/>
+      <AppreciatedPartner/>
+      <SchoolPartners/>
       <Partners/>
+      <AffiliatedActions/>
+      <FeaturedMentions/>
       {/* <ReachOut/> */}
       </Layout>
       

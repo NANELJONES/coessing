@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi'
+import { HiMail, HiLocationMarker } from 'react-icons/hi'
 import { FaTwitter, FaYoutube, FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa'
 
 const Footer = () => {
@@ -27,7 +27,7 @@ const Footer = () => {
     },
     {
       name: 'Instagram',
-      url: 'https://www.instagram.com/ocean_summer_school/',
+      url: 'https://www.instagram.com/coess.ing/reels/',
       icon: <FaInstagram className="w-6 h-6" />
     }
   ]
@@ -53,17 +53,26 @@ const Footer = () => {
             <a href="/schools" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Schools</a>
             <a href="/community-voice" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Community</a>
             <a href="/testimonials" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Testimonials</a>
+            <a href="/contact" className="block  text-4xl md:text-6xl leading-none hover:opacity-80 transition">Contact</a>
           </div>
           <div>
             <div className="/70 uppercase tracking-wide text-sm mb-6">Say Hello</div>
             <div className="space-y-4 /90">
-              <div className="flex items-center gap-3"><HiMail className="w-5 h-5 /70" /><span>COESSING@GMAIL.COM</span></div>
-              <div className="flex items-center gap-3"><HiPhone className="w-5 h-5 /70" /><span>+1 (555) 123-4567</span></div>
+              <div className="flex items-center gap-3"><HiMail className="w-5 h-5 /70" /><a href="mailto:coessing@gmail.com">coessing@gmail.com</a></div>
               <div className="flex items-start gap-3"><HiLocationMarker className="w-5 h-5 /70 mt-1" /><div>
                 <p>University of Michigan</p>
                 <p>Ann Arbor, MI 48109</p>
                 <p>Ghana & Nigeria</p>
               </div></div>
+              <a href="/contact" className="block text-sm underline hover:opacity-80">Contact page</a>
+              <a
+                href="https://www.coeswio.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm hover:opacity-80"
+              >
+                Sister school (2025): COES-WIO
+              </a>
             </div>
             <div className="flex gap-4 mt-8">
               {socialLinks.map((social, index) => (
@@ -99,7 +108,7 @@ const Footer = () => {
           </div>
           <div className="/60">
             <div className="uppercase text-xs tracking-wider mb-3">General inquiries</div>
-            <div> <a href="mailto:COESSING@GMAIL.COM  ">COESSING@GMAIL.COM  </a>          </div>
+            <div><a href="mailto:coessing@gmail.com">coessing@gmail.com</a></div>
           </div>
         </div>
 
@@ -112,7 +121,7 @@ const Footer = () => {
             <div className="/60 text-sm">© {new Date().getFullYear()} COESSING. All rights reserved.</div>
           </div>
           <div className="/60 text-sm">
-            Built by <a href="https://kr8tos.vercel.app/" target="_blank" rel="noopener noreferrer" className=" hover:opacity-80">KR8TOS</a>
+            Logo & site credits · Built by <a href="https://kr8tos.vercel.app/" target="_blank" rel="noopener noreferrer" className=" hover:opacity-80">KR8TOS</a>
           </div>
         </div>
       </div>

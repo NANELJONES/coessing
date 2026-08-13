@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { HiCalendar, HiLocationMarker, HiUsers, HiAcademicCap, HiGlobe, HiLightningBolt, HiHeart, HiStar } from 'react-icons/hi'
 import { FaTwitter, FaFacebook, FaInstagram, FaGlobe } from 'react-icons/fa'
 import Partners from '../components/Partners'
+import FeaturedMentions from '../components/FeaturedMentions'
 const AboutUsClient = () => {
   const [activeTab, setActiveTab] = useState('timeline')
 
@@ -171,64 +172,6 @@ const AboutUsClient = () => {
           years: "2022"
         }
       ]
-    }
-  ]
-
-  const pressContent = [
-    {
-      source: "Ghana News Agency",
-      date: "August 2, 2016",
-      link: "#"
-    },
-    {
-      source: "Koowa Media",
-      date: "August 2016",
-      link: "#"
-    },
-    {
-      source: "News Ghana",
-      date: "August 2016",
-      link: "#"
-    },
-    {
-      source: "2016 Ocean Sciences Meeting, Poster presentation",
-      date: "February 2016",
-      link: "#"
-    },
-    {
-      source: "2018 Ocean Sciences Meeting, Oral presentation slides",
-      date: "February 2018",
-      link: "#"
-    },
-    {
-      source: "Independent Newspapers",
-      date: "August 2022",
-      link: "#"
-    },
-    {
-      source: "UNILAG Media",
-      date: "August 2022",
-      link: "#"
-    },
-    {
-      source: "NNN News Nigeria",
-      date: "August 2022",
-      link: "#"
-    },
-    {
-      source: "Remote sensing in earth systems sciences",
-      date: "July 2022",
-      link: "#"
-    },
-    {
-      source: "GhanaWeb",
-      date: "August 2023",
-      link: "#"
-    },
-    {
-      source: "Ocean Decade",
-      date: "June 2024",
-      link: "#"
     }
   ]
 
@@ -644,49 +587,6 @@ const AboutUsClient = () => {
 
 
 
-  const PressContent = () => {
-    const ref = useRef(null)
-    const isInView = useInView(ref, { once: false, amount: 0.2 })
-    
-    return (
-      <motion.div 
-        ref={ref}
-        className='flex flex-col gap-[2em]'
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <h1 className='!text-[4em]'>COESSING in the Press</h1>
-        
-        <div className='flex flex-col gap-3'>
-          {pressContent.map((item, index) => (
-            <motion.a
-              key={index}
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className='group border border-white/20 bg-white/5 backdrop-blur-sm rounded-lg p-4 hover:bg-white/10 hover:border-white/30 transition-all duration-300'
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: isInView ? 1 : 0, x: isInView ? 0 : -30 }}
-              transition={{ duration: 0.6, delay: 0.1 + index * 0.05, ease: "easeOut" }}
-            >
-              <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-2'>
-                <p className='font-semibold group-hover:text-white transition-colors'>
-                  {item.source}
-                </p>
-                <p className='text-white/60 text-sm md:text-base'>
-                  {item.date}
-                </p>
-              </div>
-            </motion.a>
-          ))}
-        </div>
-      </motion.div>
-    )
-  }
-
-
-
   const FundingPartners = () => {
     const ref = useRef(null)
     const isInView = useInView(ref, { once: false, amount: 0.2 })
@@ -779,7 +679,7 @@ const AboutUsClient = () => {
   <Timeline />
   <ParticipantsInitiatives />
   <CoessingSuccess />
-  <PressContent />
+  <FeaturedMentions title="COESSING in the Press" />
   <FundingPartners />
   {/* <Partners/> */}
   {/* <Statistics /> */}

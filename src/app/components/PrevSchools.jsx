@@ -83,7 +83,7 @@ const SchoolCard3D = React.memo(({ school, position, index }) => {
             maxWidth={3}
             font="/Poppins/Poppins-Regular.ttf"
           >
-            {school.excerpt.substring(0, 120)}...
+            {school.excerpt ? `${school.excerpt.substring(0, 120)}...` : ''}
           </Text>
           
           {/* Read More Button - 3D style with click function */}

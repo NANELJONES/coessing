@@ -48,14 +48,20 @@ const SchoolDetailClient = ({ slug }) => {
     }
   }, [slug])
 
-  const sections = [
-    { id: 'about', title: 'About' },
-    { id: 'description', title: 'Description' },
-    { id: 'details', title: 'Details' },
-    { id: 'instructors', title: 'Instructors' },
-    { id: 'info', title: 'Info' },
-    { id: 'gallery', title: 'Gallery' }
-  ]
+  const sections = useMemo(() => {
+    const items = [
+      { id: 'about', title: 'About' },
+      { id: 'description', title: 'Description' },
+      { id: 'details', title: 'Details' },
+      { id: 'instructors', title: 'Instructors' },
+      { id: 'info', title: 'Info' },
+      { id: 'gallery', title: 'Gallery' },
+    ]
+    if (transformedSchool?.partners?.length) {
+      items.push({ id: 'partners', title: 'Partners' })
+    }
+    return items
+  }, [transformedSchool])
 
   // Memoize previous schools to avoid re-renders
   const previousSchools = useMemo(() => {
@@ -336,6 +342,30 @@ const SchoolDetailClient = ({ slug }) => {
             <div id="gallery" className="mt-16">
               <GallerySection schoolSlug={transformedSchool.slug} />
             </div>
+
+            {/* Partners — last section */}
+            {transformedSchool.partners?.length > 0 && (
+              <div id="partners" className="mt-16">
+                <h2 className="text-3xl font-bold mb-6">Partners</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {transformedSchool.partners.map((partner, index) => (
+                    <div
+                      key={`${partner.name}-${index}`}
+                      className="border border-primary_color/20 p-4 flex flex-col items-center justify-center text-center gap-3"
+                    >
+                      {partner.logo && (
+                        <img
+                          src={partner.logo}
+                          alt={partner.name || 'Partner'}
+                          className="max-h-20 max-w-full object-contain"
+                        />
+                      )}
+                      <p className="text-sm font-medium">{partner.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Sidebar - Previous Schools */}
