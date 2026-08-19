@@ -22,8 +22,9 @@ const poppins = Poppins({
 
 
 export const metadata = {
-  title: "Coessing",
-  description: "An NGO dedicated to the fighting against plastic pollution",
+  title: "COESSING — Coastal Ocean Environment Summer School in Nigeria and Ghana",
+  description:
+    "COESSING is an international collaboration building capacity in ocean and environmental sciences in West Africa. One-week summer schools held annually since 2015 in Ghana and Nigeria, endorsed by the UN Decade of Ocean Science.",
 };
 
 export default function RootLayout({ children }) {

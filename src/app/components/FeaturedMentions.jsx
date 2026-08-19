@@ -10,21 +10,19 @@ const FeaturedMentions = ({ title = 'Featured Mentions' }) => {
         COESSING in the press, journals, and partner channels.
       </p>
 
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {pressMentions.map((item) => (
           <a
             key={`${item.source}-${item.link}`}
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group border border-white/20 bg-white/5 backdrop-blur-sm p-4 hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+            className="group border border-white/20 bg-white/5 backdrop-blur-sm p-5 hover:bg-white/10 hover:border-white/40 transition-all duration-300 flex flex-col justify-between gap-3 min-h-[110px]"
           >
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-              <p className="font-semibold text-white group-hover:text-secondary_color transition-colors">
-                {item.source}
-              </p>
-              <p className="text-white/60 text-sm md:text-base">{item.date}</p>
-            </div>
+            <p className="font-semibold text-white group-hover:text-secondary_color transition-colors leading-snug">
+              {item.source}
+            </p>
+            <p className="text-white/50 text-xs mt-auto">{item.date}</p>
           </a>
         ))}
       </div>

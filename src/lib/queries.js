@@ -2,7 +2,7 @@ import { gql } from 'graphql-request'
 
 export const GET_SCHOOLS = gql`
   query GetSchools($first: Int!) {
-    schoolsConnection(first: $first, orderBy: schoolYear_DESC) {
+    schoolsConnection(first: $first, orderBy: schoolYear_DESC, where: { schoolType: coessing }) {
       edges {
         node {
           country
@@ -56,7 +56,7 @@ export const GET_SCHOOL_BY_SLUG = gql`
 // Lightweight query for school lists (only essential fields)
 export const GET_SCHOOLS_LIST = gql`
   query GetSchoolsList($first: Int!) {
-    schoolsConnection(first: $first, orderBy: schoolYear_DESC) {
+    schoolsConnection(first: $first, orderBy: schoolYear_DESC, where: { schoolType: coessing }) {
       edges {
         node {
           id
@@ -175,7 +175,7 @@ export const GET_TESTIMONIALS = gql`
 // Query to get all schools for filtering (to extract unique years)
 export const GET_ALL_SCHOOLS_FOR_FILTERS = gql`
   query GetAllSchoolsForFilters {
-    schoolsConnection(first: 1000) {
+    schoolsConnection(first: 1000, where: { schoolType: coessing }) {
       edges {
         node {
           schoolYear

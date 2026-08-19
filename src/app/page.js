@@ -10,6 +10,7 @@ import SchoolPartners from "./components/SchoolPartners"
 import Partners from "./components/Partners"
 import AffiliatedActions from "./components/AffiliatedActions"
 import FeaturedMentions from "./components/FeaturedMentions"
+import ContactForm from "./components/ContactForm"
 import OceanWaves from "./components/OceanWaves"
 import Layout from "./components/Layout"
 
@@ -30,6 +31,7 @@ export default function Home() {
       <Partners/>
       <AffiliatedActions/>
       <FeaturedMentions/>
+      <ContactForm siteName="COESSING" siteLink="https://coessing.org" imageLink="/gallery/9.jpg" />
       {/* <ReachOut/> */}
       </Layout>
       
