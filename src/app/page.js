@@ -4,13 +4,13 @@ import PrevSchoolsGrid from "./components/PrevSchoolsGrid"
 import OcenVibes from "./components/OcenVibes"
 import AboutUs from "./components/AboutUs"
 import WhyAttend from "./components/WhyAttend"
-import ReachOut from "./components/ReachOut"
 import AppreciatedPartner from "./components/AppreciatedPartner"
 import SchoolPartners from "./components/SchoolPartners"
 import Partners from "./components/Partners"
 import AffiliatedActions from "./components/AffiliatedActions"
 import FeaturedMentions from "./components/FeaturedMentions"
 import ContactForm from "./components/ContactForm"
+import Credits from "./components/Credits"
 import OceanWaves from "./components/OceanWaves"
 import Layout from "./components/Layout"
 
@@ -32,7 +32,7 @@ export default function Home() {
       <AffiliatedActions/>
       <FeaturedMentions/>
       <ContactForm siteName="COESSING" siteLink="https://coessing.org" imageLink="/gallery/9.jpg" />
-      {/* <ReachOut/> */}
+      <Credits />
       </Layout>
       
       </div>

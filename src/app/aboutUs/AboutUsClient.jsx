@@ -1,11 +1,11 @@
 "use client"
 import React, { useState, useRef } from 'react'
-import Image from 'next/image'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { HiCalendar, HiLocationMarker, HiUsers, HiAcademicCap, HiGlobe, HiLightningBolt, HiHeart, HiStar } from 'react-icons/hi'
 import { FaTwitter, FaFacebook, FaInstagram, FaGlobe } from 'react-icons/fa'
-import Partners from '../components/Partners'
 import FeaturedMentions from '../components/FeaturedMentions'
+import Publications from '../components/Publications'
+import Credits from '../components/Credits'
 const AboutUsClient = () => {
   const [activeTab, setActiveTab] = useState('timeline')
 
@@ -13,8 +13,14 @@ const AboutUsClient = () => {
     {
       year: "1990-1992",
       title: "The Beginning",
-      description: "Professor Brian K. Arbic serves as US Peace Corps Volunteer Secondary Math and Physics Teacher at Damongo Secondary School",
+      description: "Professor Brian K. Arbic serves as US Peace Corps Volunteer Secondary Math and Physics Teacher at Damongo Secondary School, where Joseph Ansong was a student.",
       type: "foundation"
+    },
+    {
+      year: "2008",
+      title: "Reconnection",
+      description: "After 16 years of no-contact, Ansong and Arbic reconnect, first over email and then in person.",
+      type: "collaboration"
     },
     {
       year: "2011-2017",
@@ -37,7 +43,7 @@ const AboutUsClient = () => {
     {
       year: "2016-2019",
       title: "Annual Growth",
-      description: "Annual in-person schools in Ghana, establishing core programs",
+      description: "Annual in-person schools in Ghana, expanding the curriculum",
       type: "growth"
     },
     {
@@ -55,19 +61,13 @@ const AboutUsClient = () => {
     {
       year: "2023",
       title: "Ghana Return",
-      description: "Hybrid school back in Ghana with enhanced programming",
+      description: "Hybrid school back in Ghana and in-person school focused on hands-on research project tracks",
       type: "return"
     },
     {
-      year: "2024",
-      title: "Nigeria Success",
-      description: "Successful in-person school in Nigeria",
-      type: "success"
-    },
-    {
-      year: "2025-2028",
-      title: "Future Vision",
-      description: "Planned alternating between Ghana (odd years) and Nigeria (even years)",
+      year: "2024–Present",
+      title: "Alternating Host Countries",
+      description: "In-person schools alternating between Nigeria (even years) and Ghana (odd years), focused on hands-on research project tracks.",
       type: "future"
     }
   ]
@@ -136,7 +136,7 @@ const AboutUsClient = () => {
       person: "Jennifer Moskel",
       achievement: "MS Thesis Research",
       description: "Wrote an MS thesis at Oregon State University on the impacts of our summer school on participants from the US, Europe, and Africa.",
-      thesisLink: "link to thesis",
+      thesisLink: "https://ir.library.oregonstate.edu/concern/graduate_thesis_or_dissertations/1n79h987m",
       institution: "Oregon State University"
     },
     {
@@ -306,33 +306,23 @@ const AboutUsClient = () => {
   }
 
 
-  const HistoryHighlights = () => {
-    const highlights = [
-      "Since 2015, COESSING has offered one-week programs in Ghana and Nigeria",
-      "Expanded to Kenya in 2025",
-      "Combines lectures, projects, and collaboration under the UN Decade of Ocean Science",
-    ]
-
-    return (
-      <div className='flex flex-col gap-[1.5em]'>
-        <h1 className='!text-[4em]'>History</h1>
-        <ul className='flex flex-col gap-4 list-disc list-inside text-white/90'>
-          {highlights.map((item, index) => (
-            <li key={index} className='leading-relaxed'>{item}</li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
-
   const BackgroundHistory = () => {
     return (
       <div className='flex flex-col gap-[2em]'>
-        <img src="/ocean1.jpg" alt="background history" className='w-full h-full max-h-[400px]  object-cover' />
+        <img src="/gallery/1.JPG" alt="COESSING Background History" className='w-full h-full max-h-[400px] object-cover grayscale' />
         <h1>Background History</h1>
-        <div className='grid grid-cols-1 lg:grid-cols-1 gap-[2em] max-w-4xl'>
-          <p>
-            COESSING is a one-week summer school that has taken place yearly since 2015 with the goal of educating and inspiring West African scientists at all career stages to pursue ocean-related fields. From 2015-2019 COESSING was held in Ghana, from 2020-2021 it was held virtually, and in 2022 it was held in Nigeria, which demonstrates that the summer school concept can be successful in multiple countries and formats. From 2023 onwards the school has alternated between Ghana (2023, 2025) and Nigeria (2026). COESSING is one example of the exchange modalities that will be supported by Ocean Corps. COESSING is an endorsed UN Ocean Decade Project.
+        <div className='grid grid-cols-1 gap-[2em] max-w-4xl'>
+          <p className='leading-relaxed text-white/90'>
+            COESSING was initiated by University of Michigan Professor Brian Arbic and Dr. Joseph Ansong who is now a faculty member at the University of Ghana. COESSING is a one-week summer school that has taken place yearly since 2015 with the goal of educating and inspiring West African scientists at all career stages to pursue ocean-related fields. We accomplish this by bringing scientists from around the world to Africa, in order to see the immense talent there and form collaborations. From 2015-2019 COESSING was held in Ghana, from 2020-2021 it was held virtually, and in 2022 it was held in Nigeria, thus demonstrating that the summer school concept can be successful in multiple countries and formats. From 2023 onwards the school has alternated between Ghana (2023, 2025) and Nigeria (2024, 2026). COESSING is an endorsed UN Ocean Decade Project. In 2025 we started a complimentary initiative in East Africa,{' '}
+            <a
+              href="https://www.coeswio.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary_color underline hover:text-white transition-colors"
+            >
+              Coastal Ocean Environment School in the Western Indian Ocean (COES-WIO)
+            </a>
+            .
           </p>
         </div>
       </div>
@@ -352,106 +342,67 @@ const AboutUsClient = () => {
         animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <h1 className='!text-[4em]'>Participants Initiatives</h1>
+        <div>
+          <h1 className='!text-[4em] mb-3'>Participants Initiatives</h1>
+          <p className='text-white/70 max-w-3xl leading-relaxed'>
+            Alumni-led projects and ventures that grew out of COESSING. More success stories — including Eunice Idowu&apos;s grant and other Science Communication Team updates — will be added as they are confirmed.
+          </p>
+        </div>
         {participantInitiatives.map((item, index) => (
           <motion.div 
             key={index} 
-            className='flex flex-col-reverse  md:flex-row-reverse gap-[2em]'
+            className='border border-white/20 bg-white/5 backdrop-blur-sm p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6'
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 30 }}
             transition={{ duration: 0.6, delay: 0.2 + index * 0.1, ease: "easeOut" }}
           >
-            {/* Image Section */}
-            <div className='w-full md:w-1/2 lg:w-2/3 lg:mt-[10em]'>
-              <Image 
-                src="/ocean1.jpg" 
-                alt={item.name}
-                width={600}
-                height={150}
-                className='w-full object-cover rounded-lg'
-              />
-
-
-<div> 
-              <p className='leading-relaxed mb-4'>{item.description}</p>
-              
-              {/* Links Section */}
-              <div className='flex flex-col gap-3 mt-auto'>
-                <div className='flex items-center gap-2'>
-                  <FaGlobe className='w-5 h-5' />
-                  <a 
-                    href={item.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className='text-white/80 hover:text-white underline transition-colors'
-                  >
-                    {item.website}
-                  </a>
+            <div className='flex flex-col gap-3'>
+              <h2 className='!text-[2em] md:!text-[2.5em] leading-tight'>{item.name}</h2>
+              {item.slogan && (
+                <p className='text-xl italic text-white/90'>&ldquo;{item.slogan}&rdquo;</p>
+              )}
+              <dl className='grid grid-cols-1 gap-2 text-sm mt-2'>
+                <div>
+                  <dt className='uppercase tracking-wide text-xs text-white/50'>Founder</dt>
+                  <dd className='text-white/90'>{item.founder}</dd>
                 </div>
-                
-                {/* Social Links */}
-                <div className='flex items-center gap-4'>
-                  <a 
-                    href={item.social.twitter} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className='text-white/80 hover:text-white transition-colors'
-                    aria-label="Twitter"
-                  >
-                    <FaTwitter className='w-6 h-6' />
-                  </a>
-                  <a 
-                    href={item.social.facebook} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className='text-white/80 hover:text-white transition-colors'
-                    aria-label="Facebook"
-                  >
-                    <FaFacebook className='w-6 h-6' />
-                  </a>
-                  <a 
-                    href={item.social.instagram} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className='text-white/80 hover:text-white transition-colors'
-                    aria-label="Instagram"
-                  >
-                    <FaInstagram className='w-6 h-6' />
-                  </a>
+                <div>
+                  <dt className='uppercase tracking-wide text-xs text-white/50'>COESSING connection</dt>
+                  <dd className='text-white/90'>{item.years}</dd>
                 </div>
-              </div>
-
-              </div>
+              </dl>
             </div>
 
-            
-            
-            {/* Content Section */}
-            <div className='w-full md:w-1/2 lg:w-1/3 flex justify-between flex-col gap-4'>
-              <div>
-                <h2 className='!text-[3em] mb-2'>{item.name}</h2>
-                <p className='text-white/80 mb-2'>Founded by {item.founder}</p>
-                <p className='text-white/60 text-sm mb-4'>{item.years}</p>
-              </div>
-              
-              {item.slogan && (
-                <div className='mb-4'>
-                  <p className='!text-[2em] italic'>"{item.slogan}"</p>
+            <div className='flex flex-col gap-4'>
+              <p className='leading-relaxed text-white/85'>{item.description}</p>
+              <div className='flex flex-col gap-3 mt-auto pt-2 border-t border-white/10'>
+                <a
+                  href={item.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='inline-flex items-center gap-2 text-secondary_color hover:underline'
+                >
+                  <FaGlobe className='w-4 h-4' />
+                  Visit website
+                </a>
+                <div className='flex items-center gap-4'>
+                  <a href={item.social.twitter} target="_blank" rel="noopener noreferrer" className='text-white/70 hover:text-white' aria-label="Twitter">
+                    <FaTwitter className='w-5 h-5' />
+                  </a>
+                  <a href={item.social.facebook} target="_blank" rel="noopener noreferrer" className='text-white/70 hover:text-white' aria-label="Facebook">
+                    <FaFacebook className='w-5 h-5' />
+                  </a>
+                  <a href={item.social.instagram} target="_blank" rel="noopener noreferrer" className='text-white/70 hover:text-white' aria-label="Instagram">
+                    <FaInstagram className='w-5 h-5' />
+                  </a>
                 </div>
-              )}
-              
-
-
-
-           
-
+              </div>
             </div>
           </motion.div>
         ))}
       </motion.div>
     )
   }
-
 
   const CoessingSuccess = () => {
     const ref = useRef(null)
@@ -517,10 +468,12 @@ const AboutUsClient = () => {
                   )}
                   {story.thesisLink && (
                     <a 
-                      href="#" 
+                      href={story.thesisLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className='text-white/80 hover:text-white underline text-sm transition-colors'
                     >
-                      {story.thesisLink}
+                      Read thesis
                     </a>
                   )}
                 </>
@@ -674,18 +627,14 @@ const AboutUsClient = () => {
         </motion.p>
       </div>
 <div className='col-span-3 lg:pl-[3em] px-2 flex flex-col gap-[2em] mb-[5em]'>
-  <HistoryHighlights />
   <BackgroundHistory />
   <Timeline />
   <ParticipantsInitiatives />
   <CoessingSuccess />
   <FeaturedMentions title="COESSING in the Press" />
+  <Publications />
   <FundingPartners />
-  {/* <Partners/> */}
-  {/* <Statistics /> */}
-  
-
-  
+  <Credits />
   </div>    
     </div>
   )

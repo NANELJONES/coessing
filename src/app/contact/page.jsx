@@ -65,10 +65,7 @@ const ContactPage = () => {
               </a>
               <div className="flex items-start gap-3 text-white/80">
                 <HiLocationMarker className="w-5 h-5 mt-0.5 shrink-0" />
-                <div className="space-y-1">
-                  <p>University of Michigan, Ann Arbor, MI 48109, USA</p>
-                  <p className="text-white/60 text-sm">Schools hosted in Ghana and Nigeria</p>
-                </div>
+                <p>Schools hosted in Ghana and Nigeria</p>
               </div>
             </div>
 

@@ -54,7 +54,7 @@ const OcenVibes = () => {
 
   {/* leftside */}
   <div className="w-full md:w-1/2">
-    <img src="/ocean1.jpg" alt="ocean" className='w-full h-full object-cover' />
+    <img src="/gallery/4.JPG" alt="COESSING" className='w-full h-full object-cover' />
 
 
   </div>

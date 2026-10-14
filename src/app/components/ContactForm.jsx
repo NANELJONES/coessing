@@ -11,14 +11,13 @@ const EMPTY_FORM = {
 };
 
 /**
- * Reusable contact form for COES-WIO, COESSING, and Global Ocean Corps.
+ * Reusable contact form for COESSING (and sister sites if needed).
  *
- *   <ContactForm siteName="COES-WIO" siteLink="https://coeswio.org" imageLink="/photo.jpg" />
- *   <ContactForm siteName="COESSING" siteLink="https://coessing.org" />
+ *   <ContactForm siteName="COESSING" siteLink="https://coessing.org" imageLink="/gallery/9.jpg" />
  */
 export default function ContactForm({
-  siteName = "COES-WIO",
-  siteLink = "https://coeswio.org",
+  siteName = "COESSING",
+  siteLink = "https://coessing.org",
   imageLink = "",
 }) {
   const [form, setForm] = useState(EMPTY_FORM);

@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { HiMail, HiLocationMarker } from 'react-icons/hi'
+import { HiMail } from 'react-icons/hi'
 import { FaTwitter, FaYoutube, FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa'
 
 const Footer = () => {
@@ -47,29 +47,24 @@ const Footer = () => {
         </div>
 
         {/* Links + contact — single row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <a href="/" className="block text-xl leading-snug hover:opacity-70 transition">Home</a>
             <a href="/aboutUs" className="block text-xl leading-snug hover:opacity-70 transition">About</a>
-            <a href="/resources" className="block text-xl leading-snug hover:opacity-70 transition">Resources</a>
+            <a href="/schools" className="block text-xl leading-snug hover:opacity-70 transition">Schools</a>
           </div>
           <div className="space-y-2">
-            <a href="/schools" className="block text-xl leading-snug hover:opacity-70 transition">Schools</a>
             <a href="/community-voice" className="block text-xl leading-snug hover:opacity-70 transition">Community</a>
             <a href="/testimonials" className="block text-xl leading-snug hover:opacity-70 transition">Testimonials</a>
             <a href="/contact" className="block text-xl leading-snug hover:opacity-70 transition">Contact</a>
           </div>
-          <div className="space-y-2 text-sm col-span-2 md:col-span-2">
+          <div className="space-y-2 text-sm col-span-2 md:col-span-1">
             <div className="uppercase tracking-wide text-xs opacity-60 mb-1">Say Hello</div>
             <a href="mailto:coessing@gmail.com" className="flex items-center gap-2 hover:opacity-70">
               <HiMail className="w-4 h-4 shrink-0" />coessing@gmail.com
             </a>
-            <div className="flex items-start gap-2 opacity-80">
-              <HiLocationMarker className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>University of Michigan, Ann Arbor, MI 48109 · Ghana & Nigeria</span>
-            </div>
             <a href="https://www.coeswio.org" target="_blank" rel="noopener noreferrer" className="block opacity-70 hover:opacity-100">
-              Sister school (2025): COES-WIO
+              Sister school (established 2025): COES-WIO
             </a>
             <div className="flex gap-3 pt-1">
               {socialLinks.map((social, index) => (

@@ -25,7 +25,12 @@ export async function getSchoolsList(limit = 50) {
 export async function getSchoolBySlug(slug) {
   try {
     const data = await graphcms.request(GET_SCHOOL_BY_SLUG, { slug })
-    return data.school
+    const school = data.school
+    // Only serve COESSING schools on this site
+    if (school && school.schoolType && school.schoolType !== 'coessing') {
+      return null
+    }
+    return school
   } catch (error) {
     console.error('Error fetching school by slug:', error)
     return null

@@ -26,7 +26,7 @@ export const GET_SCHOOLS = gql`
 
 export const GET_SCHOOL_BY_SLUG = gql`
   query GetSchoolBySlug($slug: String!) {
-    school(where: { slug: $slug }) {
+    school(where: { slug: $slug, schoolType: coessing }) {
       country
       coverImage {
         url
@@ -41,6 +41,7 @@ export const GET_SCHOOL_BY_SLUG = gql`
       schoolStatus
       schoolTheme
       schoolYear
+      schoolType
       slug
       instructors
       partners {

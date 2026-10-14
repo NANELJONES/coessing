@@ -37,6 +37,7 @@
     "react-share-social": "^0.1.60",
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.6",
+    "resend": "^6.33.0",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.1.14",
     "three": "^0.180.0",

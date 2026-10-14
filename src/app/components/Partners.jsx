@@ -85,15 +85,15 @@ const Partners = () => {
               key={index}
               className="bg-white/5 backdrop-blur-sm rounded-lg p-2 flex flex-col items-center justify-center hover:bg-white/10 transition-all duration-300 group"
             >
-              <div className="relative w-[10em] h-auto  max-w-[250px] mb-4 group-hover:scale-110 transition-transform duration-300">
-                <img
-                  src={partner.partnerLogo?.url || '/placeholder-logo.png'}
-                  alt={partner.partnerName}
-                 
-                  className="object-contain"
-                />
-              </div>
-
+              {partner.partnerLogo?.url && (
+                <div className="relative w-[10em] h-auto max-w-[250px] mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <img
+                    src={partner.partnerLogo.url}
+                    alt={partner.partnerName || 'Partner'}
+                    className="object-contain"
+                  />
+                </div>
+              )}
 
               <p className="text-white text-sm font-medium text-center leading-tight">
                 {partner.partnerName}
