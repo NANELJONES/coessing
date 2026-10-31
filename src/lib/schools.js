@@ -1,21 +1,29 @@
 import { graphcms } from './graphql'
-import { GET_SCHOOLS, GET_SCHOOL_BY_SLUG, GET_GALLERIES_BY_SCHOOL, GET_PARTNERS, GET_SCHOOL_PARTNERS, GET_COMMUNITY_VOICES, GET_TESTIMONIALS, GET_SCHOOLS_LIST, GET_ALL_SCHOOLS_FOR_FILTERS } from './queries'
+import {
+  GET_SCHOOLS,
+  GET_SCHOOL_BY_SLUG,
+  GET_GALLERIES_BY_SCHOOL,
+  GET_FUNDERS,
+  GET_SCHOOL_PARTNERS,
+  GET_COMMUNITY_VOICES,
+  GET_TESTIMONIALS,
+  GET_SCHOOLS_LIST,
+} from './queries'
 
 export async function getSchools(limit = 7) {
   try {
     const data = await graphcms.request(GET_SCHOOLS, { first: limit })
-    return data.schoolsConnection.edges.map(edge => edge.node)
+    return data.schoolsConnection.edges.map((edge) => edge.node)
   } catch (error) {
     console.error('Error fetching schools:', error)
     return []
   }
 }
 
-// Lightweight function for school lists (only essential fields)
 export async function getSchoolsList(limit = 50) {
   try {
     const data = await graphcms.request(GET_SCHOOLS_LIST, { first: limit })
-    return data.schoolsConnection.edges.map(edge => edge.node)
+    return data.schoolsConnection.edges.map((edge) => edge.node)
   } catch (error) {
     console.error('Error fetching schools list:', error)
     return []
@@ -26,7 +34,6 @@ export async function getSchoolBySlug(slug) {
   try {
     const data = await graphcms.request(GET_SCHOOL_BY_SLUG, { slug })
     const school = data.school
-    // Only serve COESSING schools on this site
     if (school && school.schoolType && school.schoolType !== 'coessing') {
       return null
     }
@@ -39,14 +46,14 @@ export async function getSchoolBySlug(slug) {
 
 export async function getGalleriesBySchool(slug, first = 1, skip = 0) {
   try {
-    const data = await graphcms.request(GET_GALLERIES_BY_SCHOOL, { 
-      slug, 
-      first, 
-      skip 
+    const data = await graphcms.request(GET_GALLERIES_BY_SCHOOL, {
+      slug,
+      first,
+      skip,
     })
     return {
-      galleries: data.galleriesConnection.edges.map(edge => edge.node),
-      pageInfo: data.galleriesConnection.pageInfo
+      galleries: data.galleriesConnection.edges.map((edge) => edge.node),
+      pageInfo: data.galleriesConnection.pageInfo,
     }
   } catch (error) {
     console.error('Error fetching galleries:', error)
@@ -54,20 +61,25 @@ export async function getGalleriesBySchool(slug, first = 1, skip = 0) {
   }
 }
 
-export async function getPartners() {
+export async function getFunders() {
   try {
-    const data = await graphcms.request(GET_PARTNERS)
-    return data.partnersConnection.edges.map(edge => edge.node)
+    const data = await graphcms.request(GET_FUNDERS)
+    return data.fundersConnection.edges.map((edge) => edge.node)
   } catch (error) {
-    console.error('Error fetching partners:', error)
+    console.error('Error fetching funders:', error)
     return []
   }
+}
+
+/** @deprecated use getFunders */
+export async function getPartners() {
+  return getFunders()
 }
 
 export async function getSchoolPartners() {
   try {
     const data = await graphcms.request(GET_SCHOOL_PARTNERS)
-    return data.schoolPartnersConnection.edges.map(edge => edge.node)
+    return data.schoolPartnersConnection.edges.map((edge) => edge.node)
   } catch (error) {
     console.error('Error fetching school partners:', error)
     return []
@@ -79,8 +91,8 @@ export async function getCommunityVoices(first = 10, skip = 0) {
     const data = await graphcms.request(GET_COMMUNITY_VOICES, { first, skip })
     const edges = data.communityVoicesConnection.edges || []
     return {
-      items: edges.map(e => ({ id: e.node.id, voice: e.node.voice || [] })),
-      pageInfo: data.communityVoicesConnection.pageInfo
+      items: edges.map((e) => ({ id: e.node.id, voice: e.node.voice || [] })),
+      pageInfo: data.communityVoicesConnection.pageInfo,
     }
   } catch (error) {
     console.error('Error fetching community voices:', error)
@@ -93,15 +105,15 @@ export async function getTestimonials(first = 10, skip = 0) {
     const data = await graphcms.request(GET_TESTIMONIALS, { first, skip })
     const edges = data.testimonialsConnection.edges || []
     return {
-      items: edges.map(e => ({
+      items: edges.map((e) => ({
         id: e.node.id,
         title: e.node.title,
         interest: e.node.interest,
         schoolYear: e.node.schoolYear,
         testimonial: e.node.testimonial,
-        imageUrl: e.node.image?.url || ''
+        imageUrl: e.node.image?.url || '',
       })),
-      pageInfo: data.testimonialsConnection.pageInfo
+      pageInfo: data.testimonialsConnection.pageInfo,
     }
   } catch (error) {
     console.error('Error fetching testimonials:', error)
@@ -109,9 +121,7 @@ export async function getTestimonials(first = 10, skip = 0) {
   }
 }
 
-// Helper function to transform school data for the 3D component
-export function 
-transformSchoolData(school) {
+export function transformSchoolData(school) {
   return {
     schoolName: school.schoolName,
     year: school.schoolYear,
@@ -119,20 +129,27 @@ transformSchoolData(school) {
     theme: school.schoolTheme,
     location: school.schoolLocation,
     excerpt: school.excerpt,
-    description: school.schoolDetails?.raw ? 
-      (() => {
-        const paragraphs = school.schoolDetails.raw.children.filter(child => child.type === 'paragraph')
-        if (paragraphs.length === 0) return ''
-        const firstPara = paragraphs[0]
-        return firstPara.children.map(child => child.text).join('')
-      })() : '',
+    description: school.schoolDetails?.raw
+      ? (() => {
+          const paragraphs = school.schoolDetails.raw.children.filter(
+            (child) => child.type === 'paragraph'
+          )
+          if (paragraphs.length === 0) return ''
+          const firstPara = paragraphs[0]
+          return firstPara.children.map((child) => child.text).join('')
+        })()
+      : '',
     coverImage: school.coverImage?.url || '/architecture_gif.gif',
     country: school.country,
     status: school.schoolStatus,
     instructors: school.instructors || [],
-    partners: (school.partners || []).map((partner) => ({
-      name: partner.partnerName || partner.schoolName || '',
-      logo: partner.partnerLogo?.url || partner.logo?.url || null,
+    funders: (school.funders || []).map((funder) => ({
+      name: funder.funderName || '',
+      logo: funder.funderLogo?.url || null,
+    })),
+    schoolPartners: (school.schoolPartner || []).map((partner) => ({
+      name: partner.schoolName || '',
+      logo: partner.logo?.url || null,
     })),
   }
 }

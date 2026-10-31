@@ -1,8 +1,9 @@
 "use client"
-import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from 'react'
-import { usePathname } from 'next/navigation'
+import React, { createContext, useContext, useState, useEffect, useMemo, useRef, useCallback } from 'react'
 
 const SchoolContext = createContext()
+const CACHE_KEY = 'schools_cache'
+const CACHE_TTL_MS = 60 * 60 * 1000 // 1 hour
 
 export const useSchoolContext = () => {
   const context = useContext(SchoolContext)
@@ -12,104 +13,105 @@ export const useSchoolContext = () => {
   return context
 }
 
+const readCache = () => {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(CACHE_KEY)
+    if (!raw) return null
+    const { data, timestamp, hasMore } = JSON.parse(raw)
+    if (!Array.isArray(data) || !timestamp) return null
+    if (Date.now() - timestamp >= CACHE_TTL_MS) return null
+    return { data, hasMore: Boolean(hasMore) }
+  } catch {
+    localStorage.removeItem(CACHE_KEY)
+    return null
+  }
+}
+
+const writeCache = (data, hasMore) => {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(
+    CACHE_KEY,
+    JSON.stringify({
+      data,
+      hasMore,
+      timestamp: Date.now(),
+    })
+  )
+}
+
 export const SchoolProvider = ({ children }) => {
   const [schools, setSchools] = useState([])
-  const [loading, setLoading] = useState(false) // Start as false, only fetch when needed
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [hasMore, setHasMore] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
-  const pathname = usePathname()
   const hasFetchedRef = useRef(false)
   const fetchingRef = useRef(false)
 
-  // Only fetch if not on /schools page (that page handles its own fetching)
-  // And only fetch once when actually needed
+  const fetchSchools = useCallback(async ({ force = false } = {}) => {
+    if (!force && (hasFetchedRef.current || fetchingRef.current)) return
+
+    fetchingRef.current = true
+    try {
+      setLoading(true)
+      setError(null)
+
+      const response = await fetch('/api/schools?minimal=true&limit=50')
+      const data = await response.json()
+
+      if (data.success) {
+        const list = data.data || []
+        const more = Boolean(data.hasMore)
+        setSchools(list)
+        setHasMore(more)
+        hasFetchedRef.current = true
+        writeCache(list, more)
+      } else {
+        setError(data.message || 'Failed to fetch schools')
+      }
+    } catch (err) {
+      console.error('Error fetching schools:', err)
+      setError('Failed to fetch schools')
+    } finally {
+      setLoading(false)
+      fetchingRef.current = false
+    }
+  }, [])
+
   useEffect(() => {
-    // Skip fetch if on /schools page
-    if (pathname?.startsWith('/schools')) {
+    const cached = readCache()
+    if (cached) {
+      setSchools(cached.data)
+      setHasMore(cached.hasMore)
+      setLoading(false)
+      hasFetchedRef.current = true
       return
     }
 
-    // Check cache first
-    const cachedData = localStorage.getItem('schools_cache')
-    if (cachedData) {
-      try {
-        const { data, timestamp } = JSON.parse(cachedData)
-        // Cache valid for 1 hour
-        if (Date.now() - timestamp < 3600000) {
-          setSchools(data)
-          setHasMore(data.length === 10) // Assuming initial limit was 10
-          hasFetchedRef.current = true
-          return
-        }
-      } catch (e) {
-        console.error('Error parsing cache', e)
-        localStorage.removeItem('schools_cache')
-      }
-    }
+    fetchSchools()
+  }, [fetchSchools])
 
-    if (hasFetchedRef.current || fetchingRef.current) return
-
-    // Lazy fetch - only when context is actually used
-    const fetchSchools = async () => {
-      fetchingRef.current = true
-      try {
-        setLoading(true)
-        const response = await fetch('/api/schools?minimal=true&limit=10')
-        const data = await response.json()
-        
-        if (data.success) {
-          setSchools(data.data)
-          setHasMore(data.hasMore || data.data.length === 10)
-          hasFetchedRef.current = true
-          
-          // Save to cache
-          localStorage.setItem('schools_cache', JSON.stringify({
-            data: data.data,
-            timestamp: Date.now()
-          }))
-        } else {
-          setError(data.message)
-        }
-      } catch (err) {
-        setError('Failed to fetch schools')
-        console.error('Error fetching schools:', err)
-      } finally {
-        setLoading(false)
-        fetchingRef.current = false
-      }
-    }
-
-    // Small delay to check if context is actually needed
-    const timer = setTimeout(() => {
-      fetchSchools()
-    }, 100)
-
-    return () => clearTimeout(timer)
-  }, [pathname])
-
-  // Function to load more schools
-  const loadMoreSchools = async () => {
+  const loadMoreSchools = useCallback(async () => {
     if (loadingMore || !hasMore) return
-    
+
     try {
       setLoadingMore(true)
-      console.log('Loading more schools...')
-      // Fetch remaining schools
-      const response = await fetch('/api/schools?minimal=true&limit=50')
+      const response = await fetch('/api/schools?minimal=true&limit=100')
       const data = await response.json()
-      console.log('Load more API Response:', data)
-      
+
       if (data.success) {
-        setSchools(data.data)
-        setHasMore(false) // All schools loaded
+        const list = data.data || []
+        setSchools(list)
+        setHasMore(false)
+        writeCache(list, false)
       }
     } catch (err) {
       console.error('Error loading more schools:', err)
     } finally {
       setLoadingMore(false)
     }
-  }
+  }, [loadingMore, hasMore])
 
   const memoizedSchools = useMemo(() => schools, [schools])
 
@@ -119,7 +121,8 @@ export const SchoolProvider = ({ children }) => {
     error,
     hasMore,
     loadingMore,
-    loadMoreSchools
+    loadMoreSchools,
+    refreshSchools: () => fetchSchools({ force: true }),
   }
 
   return (

@@ -6,7 +6,7 @@ const SectionNavigation = ({ sections }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100
+      const scrollPosition = window.scrollY + 140
 
       for (const section of sections) {
         const element = document.getElementById(section.id)
@@ -21,7 +21,7 @@ const SectionNavigation = ({ sections }) => {
     }
 
     window.addEventListener('scroll', handleScroll)
-    handleScroll() // Check initial position
+    handleScroll()
 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [sections])
@@ -34,21 +34,22 @@ const SectionNavigation = ({ sections }) => {
   }
 
   return (
-    <div className=" backdrop-blur-sm h-screen p-6 border-r-2 border-primary_color shadow-lg">
-      <h3 className="  mb-4 !text-[3em]">Sections</h3>
-      <nav className=" flex flex-col gap-[1em]">
+    <div className="border border-primary_color/10 bg-white p-5 shadow-sm">
+      <h3 className="text-sm uppercase tracking-wider text-primary_color/50 mb-4">On this page</h3>
+      <nav className="flex flex-col gap-1">
         {sections.map((section) => (
-          <p
+          <button
             key={section.id}
+            type="button"
             onClick={() => scrollToSection(section.id)}
-            className={`block w-full text-left px-3 py-2 rounded text-sm transition-colors cursor-pointer ${
+            className={`w-full text-left px-3 py-2 text-sm transition-colors border-l-2 ${
               activeSection === section.id
-                ? ' text-primary_color !text-[2em]'
-                : 'text-gray-300 !text-sm '
+                ? 'border-primary_color text-primary_color font-semibold bg-primary_color/5'
+                : 'border-transparent text-primary_color/55 hover:text-primary_color hover:bg-primary_color/[0.03]'
             }`}
           >
             {section.title}
-          </p>
+          </button>
         ))}
       </nav>
     </div>

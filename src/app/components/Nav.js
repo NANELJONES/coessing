@@ -1,275 +1,350 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSchoolContext } from '@/contexts/SchoolContext';
+import { useSchoolContext } from "@/contexts/SchoolContext";
 import { HiChevronDown } from "react-icons/hi";
 
+const nav_options = [
+  { nav_name: "Home", nav_link: "/" },
+  { nav_name: "About Us", nav_link: "/aboutUs" },
+  { nav_name: "Our Schools", nav_link: "/schools", isSchools: true },
+  { nav_name: "Community Voice", nav_link: "/community-voice" },
+  { nav_name: "Testimonials", nav_link: "/testimonials" },
+];
+
 const Nav = () => {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [schoolsExpanded, setSchoolsExpanded] = useState(false);
-  const { schools, loading: schoolsLoading, hasMore, loadingMore, loadMoreSchools } = useSchoolContext();
-
-  // Menu hierarchy: Home → About Us → Our Schools → Community Voice → Testimonials
-  const nav_options = [
-    { nav_name: "Home", nav_link: "/" },
-    { nav_name: "About Us", nav_link: "/aboutUs" },
-    { nav_name: "Our Schools", nav_link: "/schools", isSchools: true },
-    { nav_name: "Community Voice", nav_link: "/community-voice" },
-    { nav_name: "Testimonials", nav_link: "/testimonials" },
-  ];
+  const [desktopSchoolsOpen, setDesktopSchoolsOpen] = useState(false);
+  const { schools, loading: schoolsLoading, hasMore, loadingMore, loadMoreSchools } =
+    useSchoolContext();
 
   const toggleMenu = useCallback(() => {
-    setOpen(prev => !prev);
+    setOpen((prev) => !prev);
   }, []);
 
+  useEffect(() => {
+    setOpen(false);
+    setDesktopSchoolsOpen(false);
+    setSchoolsExpanded(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const isActive = (link) => {
+    if (link === "/") return pathname === "/";
+    return pathname === link || pathname?.startsWith(`${link}/`);
+  };
+
+  const sortedSchools = [...(schools || [])].sort(
+    (a, b) => (b.schoolYear || 0) - (a.schoolYear || 0)
+  );
+
   return (
-    <div 
-      className={`fixed top-0 left-0 w-full z-50 ${open ? 'pointer-events-auto' : 'pointer-events-none'}`}
-      data-open={open || undefined}
-    >
-      {/* Header */}
-      <header className={`relative ${open ? 'z-[60]' : 'z-50'} flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8 bg-transparent pointer-events-auto`}>
-          <div className="flex-shrink-0">
+    <>
+      {/* Desktop / tablet regular nav */}
+      <div className="hidden md:block h-16" aria-hidden="true" />
+      <header className="hidden md:block fixed top-0 left-0 w-full z-50 pointer-events-auto">
+        <div className="w-full bg-white/95 backdrop-blur-md border-b border-primary_color/10">
+          <div className="w-full px-6 lg:px-10 h-16 flex items-center justify-between gap-6">
+            <Link href="/" className="flex-shrink-0">
+              <img
+                src="/Logo.webp"
+                alt="COESSING"
+                className="h-10 w-auto object-contain"
+              />
+            </Link>
+
+            <nav className="flex items-center gap-1 lg:gap-2">
+              {nav_options.map((item) => {
+                if (item.isSchools) {
+                  return (
+                    <div
+                      key={item.nav_name}
+                      className="relative"
+                      onMouseEnter={() => setDesktopSchoolsOpen(true)}
+                      onMouseLeave={() => setDesktopSchoolsOpen(false)}
+                    >
+                      <Link
+                        href={item.nav_link}
+                        className={`inline-flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${
+                          isActive("/schools")
+                            ? "text-secondary_color"
+                            : "text-primary_color hover:text-secondary_color"
+                        }`}
+                      >
+                        {item.nav_name}
+                        <HiChevronDown
+                          className={`w-4 h-4 transition-transform ${
+                            desktopSchoolsOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </Link>
+
+                      <AnimatePresence>
+                        {desktopSchoolsOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 8 }}
+                            transition={{ duration: 0.18 }}
+                            className="absolute left-0 top-full pt-2"
+                          >
+                            <div className="w-72 max-h-[70vh] overflow-y-auto bg-white border border-primary_color/10 shadow-xl p-3">
+                              <Link
+                                href="/schools"
+                                className="block px-3 py-2 text-sm font-semibold text-primary_color hover:bg-primary_color/5 mb-1"
+                              >
+                                View all schools
+                              </Link>
+                              {schoolsLoading ? (
+                                <p className="px-3 py-2 text-sm text-primary_color/50">
+                                  Loading schools...
+                                </p>
+                              ) : sortedSchools.length > 0 ? (
+                                <>
+                                  {sortedSchools.map((school) => (
+                                    <Link
+                                      key={school.slug}
+                                      href={`/schools/${school.slug}`}
+                                      className="block px-3 py-2 hover:bg-primary_color/5 transition-colors"
+                                    >
+                                      <div className="text-sm font-medium text-primary_color">
+                                        {school.schoolName}
+                                      </div>
+                                      <div className="text-xs text-primary_color/50">
+                                        {school.schoolYear}
+                                      </div>
+                                    </Link>
+                                  ))}
+                                  {hasMore && (
+                                    <button
+                                      type="button"
+                                      onClick={loadMoreSchools}
+                                      disabled={loadingMore}
+                                      className="mt-2 w-full px-3 py-2 text-sm bg-primary_color text-white hover:opacity-90 disabled:opacity-50"
+                                    >
+                                      {loadingMore ? "Loading..." : "Load more"}
+                                    </button>
+                                  )}
+                                </>
+                              ) : (
+                                <p className="px-3 py-2 text-sm text-primary_color/50">
+                                  No schools available
+                                </p>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.nav_name}
+                    href={item.nav_link}
+                    className={`px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive(item.nav_link)
+                        ? "text-secondary_color"
+                        : "text-primary_color hover:text-secondary_color"
+                    }`}
+                  >
+                    {item.nav_name}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <Link
+              href="/contact"
+              className="flex-shrink-0 px-4 py-2 text-sm font-medium bg-primary_color text-white hover:opacity-90 transition-opacity"
+            >
+              Contact Us
+            </Link>
           </div>
-
-        {/* Menu Toggle div */}
-        <motion.div
-          className="relative flex items-center justify-center px-4 py-2 rounded-sm border-2 border-white cursor-pointer bg-black/20 backdrop-blur-sm hover:bg-black/30 transition-colors"
-          onClick={toggleMenu}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-        >
-          {/* Menu State - Horizontal Layout */}
-          <AnimatePresence mode="wait">
-            {!open && (
-              <motion.div
-                key="menu"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-2"
-              >
-                <span className="text-xs font-medium uppercase text-white">Menu</span>
-                <motion.span
-                  className="flex items-center justify-center w-4 h-4"
-                  style={{ originX: 0.5, originY: 0.5 }}
-                >
-                  <span className="absolute w-3 h-0.5 bg-white"></span>
-                  <span className="absolute w-3 h-0.5 bg-white rotate-90"></span>
-                </motion.span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Close State - Horizontal Layout */}
-          <AnimatePresence mode="wait">
-            {open && (
-              <motion.div
-                key="close"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-2"
-              >
-                <span className="text-xs font-medium uppercase text-primary_color">Close</span>
-                <motion.span
-                  className="flex items-center justify-center w-4 h-4"
-                  initial={{ rotate: 0 }}
-                  animate={{ rotate: 45 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ originX: 0.5, originY: 0.5 }}
-                >
-                  <span className="absolute w-3 h-0.5 bg-primary_color"></span>
-                  <span className="absolute w-3 h-0.5 bg-primary_color rotate-90"></span>
-                </motion.span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+        </div>
       </header>
 
-      {/* Main Panel */}
-      <AnimatePresence>
-        {open && (
-          <motion.aside
-            className="fixed top-0 right-0 w-full sm:w-[400px] lg:w-[500px] h-screen bg-white z-[55] shadow-2xl"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ 
-              duration: 0.5,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            aria-hidden={!open}
-          >
-            <div className="flex-shrink-0">
-              <Link href="/" className="block bg-white p-2">
-                <img
-                  src="/Logo.webp"
-                  alt="Company Logo"
-                  className="w-full max-w-[200px]"
-                />
-              </Link>
-            </div>
-            <div className="h-full overflow-y-auto px-8 pt-10 pb-12 pointer-events-auto" style={{ overscrollBehavior: 'contain' }} data-lenis-prevent>
-              {/* Navigation Items */}
-              <ul className="space-y-4 mb-12">
-                {nav_options.map((item, index) => {
-                  const navIndex = index + 1;
+      {/* Mobile menu button + drawer */}
+      <div
+        className={`md:hidden fixed top-0 left-0 w-full z-50 ${
+          open ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        <header
+          className={`relative ${
+            open ? "z-[60]" : "z-50"
+          } flex justify-between items-center h-16 px-4 bg-transparent pointer-events-auto`}
+        >
+          <Link href="/" className="pointer-events-auto">
+            <img src="/Logo.webp" alt="COESSING" className="h-9 w-auto object-contain" />
+          </Link>
 
-                  if (item.isSchools) {
-                    return (
-                      <motion.li
-                        key="our-schools"
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: 20, opacity: 0 }}
-                        transition={{ 
-                          duration: 0.5,
-                          delay: 0.1 + (index * 0.05),
-                          ease: [0.16, 1, 0.3, 1]
-                        }}
-                        className="overflow-hidden"
-                      >
-                        <div
-                          onMouseEnter={() => setSchoolsExpanded(true)}
-                          onMouseLeave={() => setSchoolsExpanded(false)}
-                          className="group w-full text-left"
-                        >
-                          <div className="flex items-center justify-between w-full text-4xl md:text-5xl text-primary_color hover:text-secondary_color transition-colors duration-200">
-                            <Link 
+          <button
+            type="button"
+            className="relative flex items-center justify-center px-4 py-2 border-2 border-white cursor-pointer bg-black/20 backdrop-blur-sm hover:bg-black/30 transition-colors"
+            onClick={toggleMenu}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+          >
+            <AnimatePresence mode="wait">
+              {!open ? (
+                <motion.span
+                  key="menu"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-2 text-xs font-medium uppercase text-white"
+                >
+                  Menu
+                  <span className="relative w-4 h-4">
+                    <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-0.5 bg-white" />
+                    <span className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-white" />
+                  </span>
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="close"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-2 text-xs font-medium uppercase text-primary_color"
+                >
+                  Close
+                  <span className="relative w-4 h-4 rotate-45">
+                    <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-0.5 bg-primary_color" />
+                    <span className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-primary_color" />
+                  </span>
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        </header>
+
+        <AnimatePresence>
+          {open && (
+            <motion.aside
+              className="fixed top-0 right-0 w-full h-screen bg-white z-[55] shadow-2xl flex flex-col"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="pt-20 px-6 pb-10 h-full overflow-y-auto" data-lenis-prevent>
+                <ul className="space-y-5 mb-10">
+                  {nav_options.map((item, index) => {
+                    if (item.isSchools) {
+                      return (
+                        <li key={item.nav_name}>
+                          <div className="flex items-center justify-between">
+                            <Link
                               href="/schools"
-                              className="block flex-grow"
+                              className="text-3xl text-primary_color"
                               onClick={() => setOpen(false)}
                             >
-                              <span className="block">
-                                {String(navIndex).padStart(2, '0')}. Our Schools
-                              </span>
+                              {String(index + 1).padStart(2, "0")}. Our Schools
                             </Link>
-                            <motion.span
-                              animate={{ rotate: schoolsExpanded ? 180 : 0 }}
-                              transition={{ duration: 0.3 }}
-                              className="ml-4 flex-shrink-0 cursor-pointer"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSchoolsExpanded(!schoolsExpanded);
-                              }}
+                            <button
+                              type="button"
+                              onClick={() => setSchoolsExpanded((v) => !v)}
+                              className="p-2"
+                              aria-label="Toggle schools list"
                             >
-                              <HiChevronDown className="w-8 h-8 text-primary_color group-hover:text-secondary_color transition-colors duration-200" />
-                            </motion.span>
+                              <HiChevronDown
+                                className={`w-6 h-6 text-primary_color transition-transform ${
+                                  schoolsExpanded ? "rotate-180" : ""
+                                }`}
+                              />
+                            </button>
                           </div>
-                        
-                          {/* Expandable Schools List */}
+
                           <AnimatePresence>
                             {schoolsExpanded && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
+                                animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                                className="overflow-hidden mt-4 ml-8 text-primary_color"
+                                className="overflow-hidden mt-3 ml-4"
                               >
-                                <div className="space-y-3 pt-2">
-                                  {schoolsLoading ? (
-                                    <div className="text-gray-500 text-sm">Loading schools...</div>
-                                  ) : schools.length > 0 ? (
-                                    <>
-                                      {schools
-                                        .sort((a, b) => b.schoolYear - a.schoolYear)
-                                        .map((school) => (
-                                          <motion.div
-                                            key={school.slug}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            exit={{ opacity: 0, x: -20 }}
-                                            transition={{ duration: 0.2 }}
-                                          >
-                                            <Link
-                                              href={`/schools/${school.slug}`}
-                                              className="block px-2 border-b-2 border-b-primary_color transition-colors duration-200 hover:text-secondary_color"
-                                              onClick={() => setOpen(false)}
-                                            >
-                                              <div className="font-semibold ">{school.schoolName}</div>
-                                              <div className="text-sm mt-1">{school.schoolYear}</div>
-                                            </Link>
-                                          </motion.div>
-                                        ))}
-                                      {hasMore && (
-                                        <motion.button
-                                          onClick={loadMoreSchools}
-                                          disabled={loadingMore}
-                                          className="mt-4 px-4 py-2 bg-primary_color text-white rounded-md hover:bg-secondary_color transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
-                                          initial={{ opacity: 0, y: 10 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          transition={{ duration: 0.2 }}
-                                        >
-                                          {loadingMore ? 'Loading...' : 'Load More Schools'}
-                                        </motion.button>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <div className="text-gray-500 text-sm">No schools available</div>
-                                  )}
-                                </div>
+                                {schoolsLoading ? (
+                                  <p className="text-sm text-primary_color/50">Loading...</p>
+                                ) : sortedSchools.length > 0 ? (
+                                  <div className="space-y-2">
+                                    {sortedSchools.map((school) => (
+                                      <Link
+                                        key={school.slug}
+                                        href={`/schools/${school.slug}`}
+                                        className="block border-b border-primary_color/20 py-2 text-primary_color"
+                                        onClick={() => setOpen(false)}
+                                      >
+                                        <div className="font-medium">{school.schoolName}</div>
+                                        <div className="text-sm opacity-60">{school.schoolYear}</div>
+                                      </Link>
+                                    ))}
+                                    {hasMore && (
+                                      <button
+                                        type="button"
+                                        onClick={loadMoreSchools}
+                                        disabled={loadingMore}
+                                        className="mt-2 px-4 py-2 bg-primary_color text-white text-sm disabled:opacity-50"
+                                      >
+                                        {loadingMore ? "Loading..." : "Load more"}
+                                      </button>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <p className="text-sm text-primary_color/50">
+                                    No schools available
+                                  </p>
+                                )}
                               </motion.div>
                             )}
                           </AnimatePresence>
-                        </div>
-                      </motion.li>
+                        </li>
+                      );
+                    }
+
+                    return (
+                      <li key={item.nav_name}>
+                        <Link
+                          href={item.nav_link}
+                          className="block text-3xl text-primary_color"
+                          onClick={() => setOpen(false)}
+                        >
+                          {String(index + 1).padStart(2, "0")}. {item.nav_name}
+                        </Link>
+                      </li>
                     );
-                  }
+                  })}
+                </ul>
 
-                  return (
-                    <motion.li
-                      key={item.nav_name}
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: 20, opacity: 0 }}
-                      transition={{ 
-                        duration: 0.5,
-                        delay: 0.1 + (index * 0.05),
-                        ease: [0.16, 1, 0.3, 1]
-                      }}
-                      className="overflow-hidden text-primary_color hover:text-secondary_color "
-                    >
-                      <Link
-                        href={item.nav_link}
-                        className="block text-4xl md:text-5xl  text-primary_color hover:text-secondary_color transition-colors duration-200"
-                        onClick={() => setOpen(false)}
-                      >
-                        <span className="block">
-                          {String(navIndex).padStart(2, '0')}. {item.nav_name}
-                        </span>
-                      </Link>
-                    </motion.li>
-                  );
-                })}
-              </ul>
-
-              {/* Contact Us div */}
-              <Link href="/contact" onClick={() => setOpen(false)}>
-                <motion.div
-                  initial={{ opacity: 0, y: 25 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 25 }}
-                  transition={{ 
-                    duration: 0.5,
-                    delay: 0.4,
-                    ease: [0.65, 0, 0.35, 1]
-                  }}
-                  className="w-full bg-primary_color text-white px-6 py-4 rounded-full text-lg font-medium hover:bg-opacity-90 transition-colors duration-200 text-center cursor-pointer"
+                <Link
+                  href="/contact"
+                  onClick={() => setOpen(false)}
+                  className="block w-full bg-primary_color text-white px-6 py-4 text-center text-lg"
                 >
                   Contact Us
-                </motion.div>
-              </Link>
-            </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
-    </div>
+                </Link>
+              </div>
+            </motion.aside>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 };
 

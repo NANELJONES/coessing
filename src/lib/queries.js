@@ -26,7 +26,7 @@ export const GET_SCHOOLS = gql`
 
 export const GET_SCHOOL_BY_SLUG = gql`
   query GetSchoolBySlug($slug: String!) {
-    school(where: { slug: $slug, schoolType: coessing }) {
+    school(where: { slug: $slug }) {
       country
       coverImage {
         url
@@ -44,9 +44,15 @@ export const GET_SCHOOL_BY_SLUG = gql`
       schoolType
       slug
       instructors
-      partners {
-        partnerName
-        partnerLogo {
+      funders {
+        funderName
+        funderLogo {
+          url
+        }
+      }
+      schoolPartner {
+        schoolName
+        logo {
           url
         }
       }
@@ -101,13 +107,13 @@ export const GET_GALLERIES_BY_SCHOOL = gql`
   }
 `
 
-export const GET_PARTNERS = gql`
-  query GetPartners {
-    partnersConnection {
+export const GET_FUNDERS = gql`
+  query GetFunders {
+    fundersConnection {
       edges {
         node {
-          partnerName
-          partnerLogo {
+          funderName
+          funderLogo {
             url
           }
         }

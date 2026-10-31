@@ -1,18 +1,21 @@
-import { getPartners } from '@/lib/schools'
+import { getFunders } from '@/lib/schools'
 
 export async function GET() {
   try {
-    const partners = await getPartners()
-    
+    const funders = await getFunders()
+
     return Response.json({
       success: true,
-      data: partners,
+      data: funders,
     })
   } catch (error) {
-    console.error('API Error fetching partners:', error)
-    return Response.json({ 
-      success: false, 
-      message: 'Failed to fetch partners' 
-    }, { status: 500 })
+    console.error('API Error fetching funders:', error)
+    return Response.json(
+      {
+        success: false,
+        message: 'Failed to fetch funders',
+      },
+      { status: 500 }
+    )
   }
 }
