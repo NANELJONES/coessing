@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useSchoolContext } from '@/contexts/SchoolContext'
 import GallerySection from '@/app/components/GallerySection'
 import { RichText } from '@graphcms/rich-text-react-renderer'
-import { transformSchoolData } from '@/lib/schools'
+import { getSchoolKey, getSchoolPath, transformSchoolData } from '@/lib/schools'
 import { FiMapPin, FiArrowLeft } from 'react-icons/fi'
 
 const OrgGrid = ({ items }) => {
@@ -193,9 +193,13 @@ const SchoolDetailClient = ({ slug }) => {
 
   const previousSchools = useMemo(() => {
     if (!schools || schoolsLoading || !transformedSchool) return []
+    const currentKey = transformedSchool.slug || transformedSchool.id
     return schools
-      .filter((s) => s.slug !== transformedSchool.slug)
-      .sort((a, b) => b.schoolYear - a.schoolYear)
+      .filter((s) => {
+        const key = s.slug || s.id
+        return Boolean(key) && key !== currentKey
+      })
+      .sort((a, b) => (b.schoolYear || 0) - (a.schoolYear || 0))
   }, [schools, schoolsLoading, transformedSchool])
 
   const scrollTo = (id) => {
@@ -230,7 +234,7 @@ const SchoolDetailClient = ({ slug }) => {
   return (
     <div className="min-h-screen w-full text-primary_color pb-20">
       {/* Full-bleed hero */}
-      <section className="relative w-full h-[70vh] min-h-[420px] max-h-[760px]">
+      <section className="relative w-full h-[52vh] min-h-[320px] max-h-[520px] overflow-hidden">
         {transformedSchool.coverImage ? (
           <Image
             src={transformedSchool.coverImage}
@@ -257,7 +261,7 @@ const SchoolDetailClient = ({ slug }) => {
               {transformedSchool.year}
               {transformedSchool.country ? ` · ${transformedSchool.country}` : ''}
             </p>
-            <h1 className="!text-[3em] md:!text-[5.5em] lg:!text-[7em] leading-[0.9] mb-5">
+            <h1 className="!text-[2em] md:!text-[2.75em] lg:!text-[3.25em] leading-tight mb-4 max-w-4xl break-words">
               {transformedSchool.schoolName}
             </h1>
             {transformedSchool.theme && (
@@ -280,7 +284,7 @@ const SchoolDetailClient = ({ slug }) => {
       </section>
 
       {/* Sticky section bar — full width */}
-      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-primary_color/10">
+      <div className="sticky top-0 md:top-16 z-30 bg-white/95 backdrop-blur-md border-b border-primary_color/10">
         <div className="w-full px-6 md:px-10 lg:px-14 overflow-x-auto">
           <div className="flex gap-1 min-w-max py-3">
             {sections.map((section) => (
@@ -288,10 +292,10 @@ const SchoolDetailClient = ({ slug }) => {
                 key={section.id}
                 type="button"
                 onClick={() => scrollTo(section.id)}
-                className={`px-4 py-2 text-sm whitespace-nowrap transition-colors ${
+                className={`px-4 py-2 text-sm whitespace-nowrap border transition-colors ${
                   activeSection === section.id
-                    ? 'bg-primary_color text-white'
-                    : 'text-primary_color/70 hover:text-primary_color hover:bg-primary_color/5'
+                    ? 'bg-primary_color border-primary_color text-white'
+                    : 'bg-transparent border-primary_color text-primary_color hover:bg-primary_color/5'
                 }`}
               >
                 {section.title}
@@ -396,10 +400,10 @@ const SchoolDetailClient = ({ slug }) => {
                 {schoolsLoading ? (
                   <p className="py-4 text-sm text-primary_color/50">Loading...</p>
                 ) : previousSchools.length > 0 ? (
-                  previousSchools.map((prev) => (
+                  previousSchools.map((prev, index) => (
                     <Link
-                      key={prev.slug}
-                      href={`/schools/${prev.slug}`}
+                      key={getSchoolKey(prev, index)}
+                      href={getSchoolPath(prev)}
                       className="py-4 border-b border-primary_color/15 hover:text-secondary_color transition-colors"
                     >
                       <div className="font-medium leading-snug">{prev.schoolName}</div>

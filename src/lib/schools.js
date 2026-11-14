@@ -2,6 +2,7 @@ import { graphcms } from './graphql'
 import {
   GET_SCHOOLS,
   GET_SCHOOL_BY_SLUG,
+  GET_SCHOOL_BY_ID,
   GET_GALLERIES_BY_SCHOOL,
   GET_FUNDERS,
   GET_SCHOOL_PARTNERS,
@@ -9,6 +10,16 @@ import {
   GET_TESTIMONIALS,
   GET_SCHOOLS_LIST,
 } from './queries'
+
+/** Prefer slug for URLs; fall back to id when slug is missing. */
+export function getSchoolPath(school) {
+  const param = school?.slug || school?.id
+  return param ? `/schools/${param}` : '/schools'
+}
+
+export function getSchoolKey(school, index = 0) {
+  return school?.id || school?.slug || `school-${index}`
+}
 
 export async function getSchools(limit = 7) {
   try {
@@ -30,18 +41,35 @@ export async function getSchoolsList(limit = 50) {
   }
 }
 
+function isCoessingSchool(school) {
+  if (!school) return false
+  if (school.schoolType && school.schoolType !== 'coessing') return false
+  return true
+}
+
 export async function getSchoolBySlug(slug) {
+  return getSchoolByParam(slug)
+}
+
+/** Resolve a school by slug first, then by id (for CMS entries without slugs). */
+export async function getSchoolByParam(param) {
+  if (!param) return null
+
   try {
-    const data = await graphcms.request(GET_SCHOOL_BY_SLUG, { slug })
-    const school = data.school
-    if (school && school.schoolType && school.schoolType !== 'coessing') {
-      return null
-    }
-    return school
+    const bySlug = await graphcms.request(GET_SCHOOL_BY_SLUG, { slug: param })
+    if (isCoessingSchool(bySlug.school)) return bySlug.school
   } catch (error) {
-    console.error('Error fetching school by slug:', error)
-    return null
+    // Not found by slug — try id next
   }
+
+  try {
+    const byId = await graphcms.request(GET_SCHOOL_BY_ID, { id: param })
+    if (isCoessingSchool(byId.school)) return byId.school
+  } catch (error) {
+    console.error('Error fetching school by param:', error)
+  }
+
+  return null
 }
 
 export async function getGalleriesBySchool(slug, first = 1, skip = 0) {
@@ -123,6 +151,7 @@ export async function getTestimonials(first = 10, skip = 0) {
 
 export function transformSchoolData(school) {
   return {
+    id: school.id,
     schoolName: school.schoolName,
     year: school.schoolYear,
     slug: school.slug,

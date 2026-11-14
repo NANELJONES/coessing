@@ -17,6 +17,9 @@ export async function GET(request) {
     let schools = minimal 
       ? await getSchoolsList(1000) // Get all for filtering
       : await getSchools(1000) // Get all for filtering
+
+    // Keep entries that have at least an id (slug optional — detail route supports both)
+    schools = schools.filter((s) => Boolean(s?.id || s?.slug))
     
     // Apply filters
     if (year) {

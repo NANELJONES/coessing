@@ -24,38 +24,50 @@ export const GET_SCHOOLS = gql`
   }
 `
 
+const SCHOOL_DETAIL_FIELDS = `
+  country
+  coverImage {
+    url
+  }
+  excerpt
+  id
+  schoolName
+  schoolLocation
+  schoolDetails {
+    raw
+  }
+  schoolStatus
+  schoolTheme
+  schoolYear
+  schoolType
+  slug
+  instructors
+  funders {
+    funderName
+    funderLogo {
+      url
+    }
+  }
+  schoolPartner {
+    schoolName
+    logo {
+      url
+    }
+  }
+`
+
 export const GET_SCHOOL_BY_SLUG = gql`
   query GetSchoolBySlug($slug: String!) {
     school(where: { slug: $slug }) {
-      country
-      coverImage {
-        url
-      }
-      excerpt
-      id
-      schoolName
-      schoolLocation
-      schoolDetails {
-        raw
-      }
-      schoolStatus
-      schoolTheme
-      schoolYear
-      schoolType
-      slug
-      instructors
-      funders {
-        funderName
-        funderLogo {
-          url
-        }
-      }
-      schoolPartner {
-        schoolName
-        logo {
-          url
-        }
-      }
+      ${SCHOOL_DETAIL_FIELDS}
+    }
+  }
+`
+
+export const GET_SCHOOL_BY_ID = gql`
+  query GetSchoolById($id: ID!) {
+    school(where: { id: $id }) {
+      ${SCHOOL_DETAIL_FIELDS}
     }
   }
 `

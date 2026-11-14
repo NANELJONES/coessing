@@ -156,6 +156,7 @@ const AboutUs = () => {
       >
         ocean science
       </motion.span>
+      {/* Inline image removed per client request
       <motion.span 
         className= "w-[6em] h-[4em]  lg:w-[10em] rounded-sm lg:h-[5em]  rounded-lg"
         initial={{ opacity: 0, y: 30 }}
@@ -164,6 +165,7 @@ const AboutUs = () => {
       >
       <img src="/gallery/6.jpg" alt="wave" className='w-full bg-white rounded-lg h-full object-cover' />
       </motion.span>
+      */}
       <motion.span 
         className="huge"
         initial={{ opacity: 0, y: 30 }}
@@ -172,6 +174,7 @@ const AboutUs = () => {
       >
         in West Africa
       </motion.span>
+      {/* Africa / globe icon removed per client request
       <motion.span 
         className="huge"
         initial={{ opacity: 0, y: 30 }}
@@ -180,6 +183,7 @@ const AboutUs = () => {
       >
         <AnimatedGlobeSVG />
       </motion.span>
+      */}
     </div>
 
     <motion.h5 

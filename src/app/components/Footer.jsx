@@ -41,7 +41,7 @@ const Footer = () => {
           <h1 className='text-5xl md:!text-[7em] lg:!text-[8em] leading-none'>
             Let's talk
           </h1>
-          <div className="relative w-16 h-16 md:w-24 md:h-24 lg:w-40 lg:h-40 flex-shrink-0">
+          <div className="relative w-28 h-28 md:w-40 md:h-40 lg:w-56 lg:h-56 flex-shrink-0">
             <Image src="/Logo.webp" alt="COESSING Logo" fill className="object-contain" />
           </div>
         </div>

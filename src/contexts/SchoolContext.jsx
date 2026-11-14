@@ -61,7 +61,7 @@ export const SchoolProvider = ({ children }) => {
       const data = await response.json()
 
       if (data.success) {
-        const list = data.data || []
+        const list = (data.data || []).filter((s) => Boolean(s?.id || s?.slug))
         const more = Boolean(data.hasMore)
         setSchools(list)
         setHasMore(more)
@@ -82,7 +82,8 @@ export const SchoolProvider = ({ children }) => {
   useEffect(() => {
     const cached = readCache()
     if (cached) {
-      setSchools(cached.data)
+      const list = (cached.data || []).filter((s) => Boolean(s?.id || s?.slug))
+      setSchools(list)
       setHasMore(cached.hasMore)
       setLoading(false)
       hasFetchedRef.current = true

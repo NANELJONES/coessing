@@ -1,9 +1,10 @@
-import { getSchoolBySlug } from '@/lib/schools'
+import { getSchoolByParam } from '@/lib/schools'
 
 export async function GET(request, { params }) {
   try {
     const { slug } = await params
-    const school = await getSchoolBySlug(slug)
+    // `slug` route param may be a CMS slug OR a school id
+    const school = await getSchoolByParam(slug)
     
     if (!school) {
       return Response.json(

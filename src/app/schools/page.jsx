@@ -47,10 +47,10 @@ const SchoolsGridLayout = () => {
         <p className="text-white/70">No schools found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {schools.map((school) => (
+          {schools.filter((school) => Boolean(school?.id || school?.slug)).map((school, index) => (
             <Link
-              key={school.id || school.slug}
-              href={`/schools/${school.slug}`}
+              key={school.id || school.slug || `school-${index}`}
+              href={`/schools/${school.slug || school.id}`}
               className="group relative border border-white/20 hover:border-white/40 overflow-hidden transition-colors"
             >
               <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
@@ -382,7 +382,7 @@ const SchoolsTimelineLayout = () => {
                   key={school.id || school.slug} 
                   className="w-[85vw] md:w-[60vw] lg:w-[40vw] flex-shrink-0 flex flex-col justify-center h-[75vh] relative group"
                 >
-                  <Link href={`/schools/${school.slug}`} className="block h-full flex flex-col">
+                  <Link href={`/schools/${school.slug || school.id}`} className="block h-full flex flex-col">
                     {/* Top Content */}
                     <div className="flex-1 flex flex-col justify-end pb-12">
                       {/* Name & Location */}

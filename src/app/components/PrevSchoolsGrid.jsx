@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { HiLocationMarker } from 'react-icons/hi'
-import { getSchools, transformSchoolData } from '@/lib/schools'
+import { getSchoolKey, getSchoolPath, transformSchoolData } from '@/lib/schools'
 
 const PrevSchoolsGrid = () => {
   const [schools, setSchools] = useState([])
@@ -11,8 +11,13 @@ const PrevSchoolsGrid = () => {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const schoolsData = await getSchools(12)
-        setSchools(schoolsData.map(transformSchoolData))
+        const response = await fetch('/api/schools?limit=12')
+        const data = await response.json()
+        if (data.success) {
+          setSchools((data.data || []).map(transformSchoolData))
+        } else {
+          setSchools([])
+        }
       } catch (error) {
         console.error('Error fetching schools:', error)
         setSchools([])
@@ -47,10 +52,10 @@ const PrevSchoolsGrid = () => {
       <h1 className="text-4xl md:!text-[5em] text-white mb-10">Previous Schools</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {schools.map((school) => (
+        {schools.map((school, index) => (
           <Link
-            key={school.slug}
-            href={`/schools/${school.slug}`}
+            key={getSchoolKey(school, index)}
+            href={getSchoolPath(school)}
             className="group relative border border-white/20 hover:border-white/40 overflow-hidden transition-colors"
           >
             <div className="aspect-[16/10] overflow-hidden bg-white/5">

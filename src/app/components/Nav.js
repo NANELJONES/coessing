@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSchoolContext } from "@/contexts/SchoolContext";
+import { getSchoolKey, getSchoolPath } from "@/lib/schools";
 import { HiChevronDown } from "react-icons/hi";
 
 const nav_options = [
@@ -48,9 +49,9 @@ const Nav = () => {
     return pathname === link || pathname?.startsWith(`${link}/`);
   };
 
-  const sortedSchools = [...(schools || [])].sort(
-    (a, b) => (b.schoolYear || 0) - (a.schoolYear || 0)
-  );
+  const sortedSchools = [...(schools || [])]
+    .filter((s) => Boolean(s?.id || s?.slug))
+    .sort((a, b) => (b.schoolYear || 0) - (a.schoolYear || 0));
 
   return (
     <>
@@ -115,10 +116,10 @@ const Nav = () => {
                                 </p>
                               ) : sortedSchools.length > 0 ? (
                                 <>
-                                  {sortedSchools.map((school) => (
+                                  {sortedSchools.map((school, index) => (
                                     <Link
-                                      key={school.slug}
-                                      href={`/schools/${school.slug}`}
+                                      key={getSchoolKey(school, index)}
+                                      href={getSchoolPath(school)}
                                       className="block px-3 py-2 hover:bg-primary_color/5 transition-colors"
                                     >
                                       <div className="text-sm font-medium text-primary_color">
@@ -188,12 +189,8 @@ const Nav = () => {
         <header
           className={`relative ${
             open ? "z-[60]" : "z-50"
-          } flex justify-between items-center h-16 px-4 bg-transparent pointer-events-auto`}
+          } flex justify-end items-center h-16 px-4 bg-transparent pointer-events-auto`}
         >
-          <Link href="/" className="pointer-events-auto">
-            <img src="/Logo.webp" alt="COESSING" className="h-9 w-auto object-contain" />
-          </Link>
-
           <button
             type="button"
             className="relative flex items-center justify-center px-4 py-2 border-2 border-white cursor-pointer bg-black/20 backdrop-blur-sm hover:bg-black/30 transition-colors"
@@ -245,6 +242,13 @@ const Nav = () => {
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="pt-20 px-6 pb-10 h-full overflow-y-auto" data-lenis-prevent>
+                <Link href="/" onClick={() => setOpen(false)} className="block mb-10">
+                  <img
+                    src="/Logo.webp"
+                    alt="COESSING"
+                    className="w-full max-w-[280px] h-auto object-contain"
+                  />
+                </Link>
                 <ul className="space-y-5 mb-10">
                   {nav_options.map((item, index) => {
                     if (item.isSchools) {
@@ -284,10 +288,10 @@ const Nav = () => {
                                   <p className="text-sm text-primary_color/50">Loading...</p>
                                 ) : sortedSchools.length > 0 ? (
                                   <div className="space-y-2">
-                                    {sortedSchools.map((school) => (
+                                    {sortedSchools.map((school, index) => (
                                       <Link
-                                        key={school.slug}
-                                        href={`/schools/${school.slug}`}
+                                        key={getSchoolKey(school, index)}
+                                        href={getSchoolPath(school)}
                                         className="block border-b border-primary_color/20 py-2 text-primary_color"
                                         onClick={() => setOpen(false)}
                                       >
