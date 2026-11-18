@@ -62,9 +62,9 @@ const Nav = () => {
           <div className="w-full px-6 lg:px-10 h-16 flex items-center justify-between gap-6">
             <Link href="/" className="flex-shrink-0">
               <img
-                src="/Logo.webp"
+                src="/new-logo.png"
                 alt="COESSING"
-                className="h-10 w-auto object-contain"
+                className="h-12 w-auto object-contain"
               />
             </Link>
 
@@ -244,9 +244,9 @@ const Nav = () => {
               <div className="pt-20 px-6 pb-10 h-full overflow-y-auto" data-lenis-prevent>
                 <Link href="/" onClick={() => setOpen(false)} className="block mb-10">
                   <img
-                    src="/Logo.webp"
+                    src="/new-logo.png"
                     alt="COESSING"
-                    className="w-full max-w-[280px] h-auto object-contain"
+                    className="w-full max-w-[320px] h-auto object-contain"
                   />
                 </Link>
                 <ul className="space-y-5 mb-10">

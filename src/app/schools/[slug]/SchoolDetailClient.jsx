@@ -49,19 +49,34 @@ const richTextRenderers = {
     </blockquote>
   ),
   img: (props) => {
-    const { src, altText, title, height, width } = props
+    const src = props?.src || props?.url
     if (!src) return null
     return (
-      <div className="my-10 w-full overflow-hidden">
-        <Image
+      <figure className="my-8 block w-full max-w-[600px] clear-both">
+        <img
           src={src}
-          alt={altText || title || 'Content image'}
-          width={width || 1400}
-          height={height || 800}
-          className="w-full h-auto max-h-[520px] object-cover"
+          alt={props?.altText || props?.title || props?.alt || 'Content image'}
+          className="block w-full h-auto max-w-[600px] object-contain"
+          loading="lazy"
         />
-      </div>
+      </figure>
     )
+  },
+  Asset: {
+    image: (props) => {
+      const src = props?.url || props?.src
+      if (!src) return null
+      return (
+        <figure className="my-8 block w-full max-w-[600px] clear-both">
+          <img
+            src={src}
+            alt={props?.altText || props?.title || props?.alt || 'Content image'}
+            className="block w-full h-auto max-w-[600px] object-contain"
+            loading="lazy"
+          />
+        </figure>
+      )
+    },
   },
   a: ({ children, href, openInNewTab }) => (
     <a
@@ -283,20 +298,23 @@ const SchoolDetailClient = ({ slug }) => {
         </div>
       </section>
 
-      {/* Sticky section bar — full width */}
-      <div className="sticky top-0 md:top-16 z-30 bg-white/95 backdrop-blur-md border-b border-primary_color/10">
-        <div className="w-full px-6 md:px-10 lg:px-14 overflow-x-auto">
-          <div className="flex gap-1 min-w-max py-3">
+      {/* Sticky section bar — desktop only */}
+      <div className="hidden md:block sticky top-16 z-30 bg-white/95 backdrop-blur-md border-b border-primary_color/10">
+        <div className="w-full px-6 md:px-10 lg:px-14">
+          <div className="flex gap-2 py-3">
             {sections.map((section) => (
               <button
                 key={section.id}
                 type="button"
                 onClick={() => scrollTo(section.id)}
-                className={`px-4 py-2 text-sm whitespace-nowrap border transition-colors ${
-                  activeSection === section.id
-                    ? 'bg-primary_color border-primary_color text-white'
-                    : 'bg-transparent border-primary_color text-primary_color hover:bg-primary_color/5'
-                }`}
+                className={`school-section-nav${activeSection === section.id ? ' is-active' : ''}`}
+                style={{
+                  backgroundImage: 'none',
+                  background:
+                    activeSection === section.id ? 'var(--color-primary_color)' : 'transparent',
+                  border: '1px solid var(--color-primary_color)',
+                  color: activeSection === section.id ? '#fff' : 'var(--color-primary_color)',
+                }}
               >
                 {section.title}
               </button>
@@ -343,7 +361,7 @@ const SchoolDetailClient = ({ slug }) => {
             {school.schoolDetails?.raw && (
               <section id="details" className="scroll-mt-28">
                 <h2 className="!text-[3em] md:!text-[4em] leading-none mb-8">Details</h2>
-                <div className="max-w-5xl">
+                <div className="school-rich-text max-w-5xl">
                   <RichText content={school.schoolDetails.raw} renderers={richTextRenderers} />
                 </div>
               </section>

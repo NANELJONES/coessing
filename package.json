@@ -6,7 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:migration": "node --test --disable-warning=ExperimentalWarning tests/migration/*.test.js",
+    "migration:scan": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js scan",
+    "migration:preview": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js preview",
+    "migration:dry-run": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js dry-run",
+    "migration:school": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js migrate",
+    "migration:run": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js migrate",
+    "migration:resume": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js resume",
+    "migration:verify": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js verify",
+    "migration:report": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js report",
+    "migration:test-connections": "node --disable-warning=ExperimentalWarning scripts/migration/cli.js test-connections"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

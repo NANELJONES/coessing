@@ -35,6 +35,26 @@ button {
 
 }
 
+/* Kill global button gradient for school section nav pills */
+button.school-section-nav {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  border: 1px solid var(--color-primary_color) !important;
+  color: var(--color-primary_color) !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 9999px !important;
+}
+
+button.school-section-nav.is-active {
+  background: var(--color-primary_color) !important;
+  background-image: none !important;
+  background-color: var(--color-primary_color) !important;
+  border-color: var(--color-primary_color) !important;
+  color: #fff !important;
+}
+
 /* .chrome-border {
   position: absolute;
   inset: -2px;
@@ -228,4 +248,24 @@ p {
   width: 100% !important;
   height: auto !important;
   max-height: 400px !important;
+}
+
+/* Hygraph rich text images on school detail pages */
+.school-rich-text img {
+  display: block !important;
+  float: none !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.school-rich-text figure {
+  display: block !important;
+  float: none !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  clear: both;
 }
