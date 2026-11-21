@@ -7,6 +7,7 @@ import NextTopLoader from 'nextjs-toploader';
 import Loading from "./components/Loading"
 import {ReactLenis}  from  "./utils/Lenis"
 import { SchoolProvider } from "@/contexts/SchoolContext"
+import { Analytics } from "@vercel/analytics/next"
 // import { StateContext } from "./Context/StateContext";
 
 
@@ -45,7 +46,7 @@ export default function RootLayout({ children }) {
       </SchoolProvider>
         {/* </StateContext> */}
         </Loading>
-        
+        <Analytics />
       </body>
     </html>
   );
