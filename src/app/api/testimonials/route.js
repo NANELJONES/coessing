@@ -5,8 +5,16 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url)
     const first = parseInt(searchParams.get('first') || '10', 10)
     const skip = parseInt(searchParams.get('skip') || '0', 10)
+    const year = searchParams.get('year')
 
-    const { items, pageInfo } = await getTestimonials(first, skip)
+    if (!year) {
+      return Response.json(
+        { success: false, message: 'year query param is required' },
+        { status: 400 }
+      )
+    }
+
+    const { items, pageInfo } = await getTestimonials(first, skip, year)
 
     return Response.json({ success: true, data: items, pageInfo })
   } catch (error) {
@@ -14,5 +22,3 @@ export async function GET(request) {
     return Response.json({ success: false, message: 'Failed to fetch testimonials' }, { status: 500 })
   }
 }
-
-

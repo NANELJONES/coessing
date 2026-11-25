@@ -4,16 +4,14 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const GALLERY_IMAGES = [
-  '/gallery/1.JPG',
-  '/gallery/2.JPG',
-  '/gallery/3.JPG',
-  '/gallery/4.JPG',
-  '/gallery/5.JPG',
-  '/gallery/6.jpg',
-  '/gallery/7.jpg',
-  '/gallery/8.jpg',
-  '/gallery/9.jpg',
-]
+  '/new-images/WhatsApp Image 2026-11-25 at 3.01.20 PM.jpeg',
+  '/new-images/WhatsApp Image 2026-11-25 at 3.01.20 PM (1).jpeg',
+  '/new-images/WhatsApp Image 2026-11-25 at 3.01.20 PM (2).jpeg',
+  '/new-images/WhatsApp Image 2026-11-25 at 3.01.21 PM.jpeg',
+  '/new-images/WhatsApp Image 2026-11-25 at 3.01.21 PM (1).jpeg',
+  '/new-images/WhatsApp Image 2026-11-25 at 3.01.21 PM (2).jpeg',
+  '/new-images/WhatsApp Image 2026-11-25 at 3.01.21 PM (3).jpeg',
+].map((path) => encodeURI(path))
 
 const Header = () => {
   const [index, setIndex] = useState(0)

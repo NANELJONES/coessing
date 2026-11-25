@@ -168,9 +168,39 @@ export const GET_COMMUNITY_VOICES = gql`
   }
 `
 
+export const GET_TESTIMONIAL_YEARS = gql`
+  query GetTestimonialYears($first: Int!, $skip: Int!) {
+    testimonialsConnection(
+      first: $first
+      skip: $skip
+      where: { schoolType: coessing }
+    ) {
+      edges {
+        node {
+          schoolYear
+          school {
+            schoolYear
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`
+
 export const GET_TESTIMONIALS = gql`
-  query GetTestimonials($first: Int!, $skip: Int!) {
-    testimonialsConnection(first: $first, skip: $skip, orderBy: createdAt_ASC) {
+  query GetTestimonials($first: Int!, $skip: Int!, $year: String!, $yearInt: Int!) {
+    testimonialsConnection(
+      first: $first
+      skip: $skip
+      orderBy: createdAt_DESC
+      where: {
+        schoolType: coessing
+        OR: [{ schoolYear: $year }, { school: { schoolYear: $yearInt } }]
+      }
+    ) {
       edges {
         node {
           id
@@ -178,7 +208,17 @@ export const GET_TESTIMONIALS = gql`
           interest
           schoolYear
           testimonial
-          image { url }
+          school {
+            id
+            schoolYear
+            schoolName
+            slug
+          }
+          image {
+            url
+            mimeType
+            fileName
+          }
         }
       }
       pageInfo {

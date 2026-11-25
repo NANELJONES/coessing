@@ -7,7 +7,7 @@ import WhyAttend from "./components/WhyAttend"
 import AppreciatedPartner from "./components/AppreciatedPartner"
 import SchoolPartners from "./components/SchoolPartners"
 import Partners from "./components/Partners"
-import AffiliatedActions from "./components/AffiliatedActions"
+// import AffiliatedActions from "./components/AffiliatedActions"
 import FeaturedMentions from "./components/FeaturedMentions"
 import ContactForm from "./components/ContactForm"
 import Credits from "./components/Credits"
@@ -29,7 +29,7 @@ export default function Home() {
       <AppreciatedPartner/>
       <SchoolPartners/>
       <Partners/>
-      <AffiliatedActions/>
+      {/* <AffiliatedActions/> */}
       <FeaturedMentions/>
       <ContactForm siteName="COESSING" siteLink="https://coessing.org" imageLink="/gallery/9.jpg" />
       <Credits />

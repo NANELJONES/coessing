@@ -8,6 +8,7 @@ import {
   GET_SCHOOL_PARTNERS,
   GET_COMMUNITY_VOICES,
   GET_TESTIMONIALS,
+  GET_TESTIMONIAL_YEARS,
   GET_SCHOOLS_LIST,
 } from './queries'
 
@@ -128,19 +129,76 @@ export async function getCommunityVoices(first = 10, skip = 0) {
   }
 }
 
-export async function getTestimonials(first = 10, skip = 0) {
+function mapTestimonialNode(node) {
+  const mimeType = node.image?.mimeType || ''
+  const mediaUrl = node.image?.url || ''
+  const yearFromSchool = node.school?.schoolYear
+  const year =
+    yearFromSchool != null && yearFromSchool !== ''
+      ? String(yearFromSchool)
+      : node.schoolYear
+        ? String(node.schoolYear)
+        : null
+
+  return {
+    id: node.id,
+    title: node.title,
+    interest: node.interest,
+    schoolYear: year,
+    schoolName: node.school?.schoolName || '',
+    schoolSlug: node.school?.slug || '',
+    testimonial: node.testimonial,
+    imageUrl: mediaUrl,
+    mediaUrl,
+    mimeType,
+    mediaType: mimeType.startsWith('video/') ? 'video' : mediaUrl ? 'image' : 'none',
+  }
+}
+
+/** Lightweight: only year fields, paginated server-side to build the year nav. */
+export async function getTestimonialYears() {
   try {
-    const data = await graphcms.request(GET_TESTIMONIALS, { first, skip })
+    const years = new Set()
+    let skip = 0
+    const first = 100
+    let hasNext = true
+
+    while (hasNext) {
+      const data = await graphcms.request(GET_TESTIMONIAL_YEARS, { first, skip })
+      const edges = data.testimonialsConnection?.edges || []
+      for (const e of edges) {
+        const y = e.node.school?.schoolYear ?? e.node.schoolYear
+        if (y != null && y !== '') years.add(String(y))
+      }
+      hasNext = Boolean(data.testimonialsConnection?.pageInfo?.hasNextPage)
+      skip += first
+      if (!edges.length) break
+    }
+
+    return [...years].sort((a, b) => Number(b) - Number(a))
+  } catch (error) {
+    console.error('Error fetching testimonial years:', error)
+    return []
+  }
+}
+
+export async function getTestimonials(first = 10, skip = 0, year) {
+  try {
+    if (!year) {
+      return { items: [], pageInfo: { hasNextPage: false } }
+    }
+
+    const yearStr = String(year)
+    const yearInt = parseInt(yearStr, 10)
+    const data = await graphcms.request(GET_TESTIMONIALS, {
+      first,
+      skip,
+      year: yearStr,
+      yearInt: Number.isFinite(yearInt) ? yearInt : 0,
+    })
     const edges = data.testimonialsConnection.edges || []
     return {
-      items: edges.map((e) => ({
-        id: e.node.id,
-        title: e.node.title,
-        interest: e.node.interest,
-        schoolYear: e.node.schoolYear,
-        testimonial: e.node.testimonial,
-        imageUrl: e.node.image?.url || '',
-      })),
+      items: edges.map((e) => mapTestimonialNode(e.node)),
       pageInfo: data.testimonialsConnection.pageInfo,
     }
   } catch (error) {
